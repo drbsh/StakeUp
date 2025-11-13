@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}О платформе{% endblock %}
+{% block content %}
+
+<!-- Шапка -->
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="#about">Проекты</a>
+    <a href="#">Регистрация</a>
+    <a href="#">Вход/Регистрация</a>
+</header>
+
+<!-- Страницы -->
+<div class="page" id="home">
+    <div class="hero">
+        <img src="{% static 'Image/logo.png' %}" alt="Логотип платформы" class="logo">
+        <h1>О платформе</h1>
+        <p class="subtitle">Прозрачный краудфандинг.</p>
+        <div class="buttons">
+            <a href="#projects" class="btn btn-primary">Создать проект</a>
+            <a href="#welcome" class="btn btn-secondary">Смотреть проекты</a>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="welcome">
+    <div class="welcome-content">
+        <h1 class="welcome-title">Наша платформа позволяет собирать средства на инновационные идеи, социальные инициативы и творческие проекты.</h1>
+        <p class="welcome-desc">Каждый участник — создатель или вкладчик — получает прозрачные условия, поддержку и честные инструменты финансового взаимодействия.</p>
+    </div>
+</div>
+
+<div class="page" id="projects" style="display: none;">
+    <!-- Позже заполните -->
+    <h2 style="text-align: center; padding-top: 100px;">Проекты — скоро</h2>
+</div>
+<div class="page" id="projects">
+    <div class="projects-grid">
+        <!-- Карточка 1 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Гибкость</h3>
+                <p class="project-slogan">Платформа подходит для любых видов проектов и позволяет привлекать поддержку со всей России.</p>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/greenpark.png' %}" alt="Эко-парк">
+            </div>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Безопасность.</h3>
+                <p class="project-slogan">Все платежи защищены, прозрачный процесс возврата средств и проверка подлинности проектов.</p>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/school.png' %}" alt="Школа">
+            </div>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Поддержка.</h3>
+                <p class="project-slogan">Все платежи защищены, прозрачный процесс возврата средств и проверка подлинности проектов.</p>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/bridge.png' %}" alt="Мост">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="projects">
+    <div class="projects-header">
+        <h2 class="projects-title">Детали использования</h2>
+        <p class="projects-subtitle2">Для создателей: после регистрации вы сразу можете создать проект, оформить его описание, добавить изображения, видео и целевые суммы, выбрать тип сбора и запустить кампанию.   
+            <br>Для вкладчиков: ознакомьтесь с проектами, выберите интересующий, внесите вклад любым удобным способом. Если сбор не выполняется — получите возврат средств на указанные реквизиты.
+            <br>Все коммуникации между участниками происходят через защищенные внутренние сообщения. Авторы могут видеть статистику и управлять сборами в режиме реального времени.
+        </p>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="#welcome">О нас</a></li>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#">Статистика</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#faq">Как поддержать проект?</a></li>
+                    <li><a href="#faq">Как создать проект?</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Соцсети</h3>
+                <ul>
+                    <li><a href="https://t.me/drbshh" target="_blank">Telegram</a></li>
+                    <li><a href="#">ВКонтакте</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+{% endblock %}

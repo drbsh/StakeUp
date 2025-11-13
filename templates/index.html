@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% block title %}Краудфандинг. Будущее.{% endblock %}
+{% block content %}
+{% load static %}
+
+<!-- Шапка -->
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'about' %}">О платформе</a>
+    <a href="#projects">Проекты</a>
+    <a href="{% url 'register' %}">Создать проект</a>
+    <a href="{% url 'register' %}">Вход/Регистрация</a>
+</header>
+
+<!-- Страницы -->
+<div class="page" id="home">
+    <div class="hero">
+        <img src="{% static 'Image/logo.png' %}" alt="Логотип платформы" class="logo">
+        <h1>Краудфандинг. Будущее.</h1>
+        <p class="subtitle">Платформа для поддержки идей и инициатив</p>
+        <div class="buttons">
+            <a href="#projects" class="btn btn-primary">Смотреть проекты</a>
+            <a href="#welcome" class="btn btn-secondary">Узнать больше</a>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="welcome">
+    <div class="welcome-content">
+        <h1 class="welcome-title">Добро пожаловать на нашу краудфандинг платформу нового поколения!</h1>
+        <p class="welcome-desc">Здесь вы можете поддерживать творческие, социальные, образовательные и благотворительные проекты, а также собирать средства на запуск собственных идей.</p>
+    </div>
+</div>
+
+<div class="page" id="projects" style="display: none;">
+    <!-- Позже заполните -->
+    <h2 style="text-align: center; padding-top: 100px;">Проекты — скоро</h2>
+</div>
+<div class="page" id="projects">
+    <div class="projects-header">
+        <h2 class="projects-title">Текущие проекты</h2>
+        <p class="projects-subtitle">Изучайте активные инициативы и поддерживайте любимые идеи</p>
+    </div>
+
+    <div class="projects-grid">
+        <!-- Карточка 1 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Эко-парк "Зелёный Лист"</h3>
+                <p class="project-slogan">Создадим первый городской лес в центре мегаполиса</p>
+                    <div class="project-buttons">
+                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                    </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/greenpark.png' %}" alt="Эко-парк">
+            </div>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Школа будущего</h3>
+                <p class="project-slogan">Бесплатное IT-образование для детей из малых городов</p>
+                    <div class="project-buttons">
+                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                    </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/school.png' %}" alt="Школа">
+            </div>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Мост надежды</h3>
+                <p class="project-slogan">Восстановим мост в отдалённом селе — вернём связь с миром</p>
+                    <div class="project-buttons">
+                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                    </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/bridge.png' %}" alt="Мост">
+            </div>
+        </div>
+
+        <!-- Карточка 4 -->
+        <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Арт-резиденция</h3>
+                <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/art.png' %}" alt="Резиденция">
+            </div>
+        </div>
+                <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Арт-резиденция</h3>
+                <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/art.png' %}" alt="Резиденция">
+            </div>
+        </div>
+                <div class="project-card">
+            <div class="project-text">
+                <h3 class="project-name">Арт-резиденция</h3>
+                <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
+                    <div class="project-buttons">
+                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                    </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/art.png' %}" alt="Резиденция">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="faq">
+    <div class="faq-content">
+        <h2 class="faq-title">Часто задаваемые вопросы</h2>
+        <div class="faq-item">
+            <button class="faq-btn">
+                + Что такое краудфандинг?
+                <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+                <p>Краудфандинг — это способ коллективного финансирования идей и проектов большим количеством людей через онлайн-платформу. Выберите заинтересовавший вас проект и сделайте вклад через безопасную систему BitPay, используя криптовалюту.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-btn">
+                + Как поддержать проект?
+                <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+                <p>Выберите проект, который вам нравится, нажмите «Пожертвовать», укажите сумму и завершите платёж через BitPay. Поддержка возможна в BTC, ETH и USDT.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-btn">
+                + Как создать свой проект?
+                <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+                <p>Зарегистрируйтесь на платформе и нажмите «Создать проект» в меню навигации.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="#welcome">О нас</a></li>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#">Статистика</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#faq">Как поддержать проект?</a></li>
+                    <li><a href="#faq">Как создать проект?</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Соцсети</h3>
+                <ul>
+                    <li><a href="https://t.me/drbshh" target="_blank">Telegram</a></li>
+                    <li><a href="#">ВКонтакте</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+{% endblock %}

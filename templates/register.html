@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<!-- Шапка (fixed, как на всех страницах) -->
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="#projects">Проекты</a>
+    <a href="{% url 'enter' %}">Вход</a>
+</header>
+
+<!-- Основной контент -->
+<div class="page" style="padding-top: 120px; padding-bottom: 80px;">
+    <div style="max-width: 500px; width: 100%; padding: 0 80px; text-align: center;">
+        <h1 style="font-size: 42px; font-weight: 700; color: #000; margin: 0 0 16px;">Регистрация</h1>
+        <p style="font-size: 36px; font-weight: 700; color: #999; margin: 0 0 40px;">Создайте аккаунт</p>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+    <input type="text" class="login-input" placeholder="Логин">
+
+    <div style="position: relative;">
+        <input type="password" id="id_password" class="login-input" placeholder="Пароль" style="padding-right: 50px;">
+        <img src="{% static 'Image/hide.png' %}"
+             class="toggle-password"
+             data-target="id_password"
+             data-state="hidden"
+             data-show-src="{% static 'Image/show.png' %}"
+             data-hide-src="{% static 'Image/hide.png' %}"
+             alt="Показать пароль"
+             style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; width: 20px; height: 20px;"
+        >
+    </div>
+
+    <div style="position: relative;">
+        <input type="password" id="id_password2" class="login-input" placeholder="Повторите пароль" style="padding-right: 50px;">
+        <img src="{% static 'Image/hide.png' %}"
+             class="toggle-password"
+             data-target="id_password2"
+             data-state="hidden"
+             data-show-src="{% static 'Image/show.png' %}"
+             data-hide-src="{% static 'Image/hide.png' %}"
+             alt="Показать пароль"
+             style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; width: 20px; height: 20px;"
+        >
+    </div>
+</div>
+
+        <button class="btn btn-primary" style="width: 100%; padding: 14px;">
+            Зарегистрироваться
+        </button>
+
+        <p class="agreePageEnter" style="
+            font-size: 14px;
+            color: #999;
+            margin-top: 24px;
+            line-height: 1.5;
+        ">
+            Продолжая, вы соглашаетесь на обработку персональных данных,<br>
+            а также принимаете условия пользовательского соглашения
+        </p>
+    </div>
+</div>
+{% endblock %}
