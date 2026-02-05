@@ -9,7 +9,7 @@
         <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
     </a>
     <a href="{% url 'about' %}">О платформе</a>
-    <a href="#projects">Проекты</a>
+    <a href="{% url 'projects' %}">Проекты</a>
     <a href="{% url 'register' %}">Создать проект</a>
     <a href="{% url 'register' %}">Вход/Регистрация</a>
 </header>
@@ -21,8 +21,8 @@
         <h1>Краудфандинг. Будущее.</h1>
         <p class="subtitle">Платформа для поддержки идей и инициатив</p>
         <div class="buttons">
-            <a href="#projects" class="btn btn-primary">Смотреть проекты</a>
-            <a href="#welcome" class="btn btn-secondary">Узнать больше</a>
+            <a href="{% url 'projects' %}" class="btn btn-primary">Смотреть проекты</a>
+            <a href="{% url 'about' %}" class="btn btn-secondary">Узнать больше</a>
         </div>
     </div>
 </div>
@@ -51,8 +51,8 @@
                 <h3 class="project-name">Эко-парк "Зелёный Лист"</h3>
                 <p class="project-slogan">Создадим первый городской лес в центре мегаполиса</p>
                     <div class="project-buttons">
-                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -66,8 +66,8 @@
                 <h3 class="project-name">Школа будущего</h3>
                 <p class="project-slogan">Бесплатное IT-образование для детей из малых городов</p>
                     <div class="project-buttons">
-                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -81,8 +81,8 @@
                 <h3 class="project-name">Мост надежды</h3>
                 <p class="project-slogan">Восстановим мост в отдалённом селе — вернём связь с миром</p>
                     <div class="project-buttons">
-                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -96,8 +96,8 @@
                 <h3 class="project-name">Арт-резиденция</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                 <div class="project-buttons">
-                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                 </div>
             </div>
             <div class="project-image">
@@ -109,8 +109,8 @@
                 <h3 class="project-name">Арт-резиденция</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                 <div class="project-buttons">
-                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                 </div>
             </div>
             <div class="project-image">
@@ -122,8 +122,8 @@
                 <h3 class="project-name">Арт-резиденция</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                     <div class="project-buttons">
-                        <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -132,7 +132,47 @@
         </div>
     </div>
 </div>
+<!-- Преимущества -->
+<div class="page" id="advantages">
+    <div class="advantages-container">
+        <h2 class="advantages-title">Почему выбирают нас?</h2>
+        <div class="advantages-grid">
+            <!-- Левая колонка -->
+            <div class="advantage-card">
+                <div class="advantage-icon">💡</div>
+                <h3 class="advantage-title">Сила крауд-платформы</h3>
+                <p class="advantage-text">Объединение идей, ресурсов и поддержки от тысяч людей</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">🎯</div>
+                <h3 class="advantage-title">Разные пути реализации</h3>
+                <p class="advantage-text">Гибкие форматы воплощения проектов под любые цели</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">📈</div>
+                <h3 class="advantage-title">Экспертиза и опыт</h3>
+                <p class="advantage-text">13 лет развития краудфандинга, проверенных решений и кейсов</p>
+            </div>
 
+            <!-- Правая колонка -->
+            <div class="advantage-card">
+                <div class="advantage-icon">🛠️</div>
+                <h3 class="advantage-title">Комплексная поддержка</h3>
+                <p class="advantage-text">Готовые сервисы для решения любых задач на всех этапах</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">❤️</div>
+                <h3 class="advantage-title">Всё, что вдохновляет</h3>
+                <p class="advantage-text">Возможность поддержать или приобрести то, что действительно нравится</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">👥</div>
+                <h3 class="advantage-title">Сообщество</h3>
+                <p class="advantage-text">Пространство для общения, вдохновения и совместных инициатив</p>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="page" id="faq">
     <div class="faq-content">
         <h2 class="faq-title">Часто задаваемые вопросы</h2>

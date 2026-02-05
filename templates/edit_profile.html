@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'about' %}">О платформе</a>
+    <a href="#projects">Проекты</a>
+    <a href="{% url 'register' %}">Создать проект</a>
+    <a href="{% url 'register' %}">Вход/Регистрация</a>
+</header>
+
+<div class="page edit-profile-page">
+    <div class="hero hero_editprof">
+        <h1>Редактирование профиля</h1>
+        <p class="subtitle">Измените ваши данные на новые</p>
+        <form method="post" class="edit-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Аватар (опционально) -->
+            <div class="form-group">
+                <label class="form-label">Аватар</label>
+                <div class="avatar-upload">
+                    <img id="avatar-preview" 
+                         src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'Image/avatar.png' %}{% endif %}"
+                         alt="Предпросмотр аватара"
+                         class="avatar-preview">
+                    <label for="id_avatar" class="btn btn-secondary btn-upload">Загрузить фото</label>
+                    <input type="file" id="id_avatar" name="avatar" accept="image/*" class="avatar-input">
+                    <p class="form-hint">Поддерживаются JPG, PNG. Макс. размер — 5 МБ.</p>
+                </div>
+            </div>
+
+            <!-- Имя -->
+            <div class="form-group">
+                <label for="id_full_name" class="form-label">Полное имя</label>
+                <input type="text" 
+                       id="id_full_name" 
+                       name="full_name" 
+                       value="{{ user.get_full_name|default:user.username }}"
+                       class="form-input"
+                       placeholder="Например, Сергей Дроботько">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="id_email" class="form-label">Email</label>
+                <input type="email" 
+                       id="id_email" 
+                       name="email" 
+                       value="{{ user.email }}"
+                       class="form-input"
+                       required>
+                <p class="form-hint">На этот email будут приходить уведомления о проектах.</p>
+            </div>
+
+            <!-- Возраст -->
+            <div class="form-group">
+                <label for="id_age" class="form-label">Возраст</label>
+                <input type="number" 
+                       id="id_age" 
+                       name="age" 
+                       value="{{ user.profile.age|default:'' }}"
+                       min="13" max="120"
+                       class="form-input"
+                       placeholder="Укажите возраст">
+            </div>
+
+            <!-- Город -->
+            <div class="form-group">
+                <label for="id_city" class="form-label">Город</label>
+                <input type="text" 
+                       id="id_city" 
+                       name="city" 
+                       value="{{ user.profile.city|default:'' }}"
+                       class="form-input"
+                       placeholder="Например, Санкт-Петербург">
+            </div>
+
+            <!-- Telegram -->
+            <div class="form-group">
+                <label for="id_telegram" class="form-label">Telegram</label>
+                <div class="input-with-prefix">
+                    <span class="input-prefix">@</span>
+                    <input type="text" 
+                           id="id_telegram" 
+                           name="telegram" 
+                           value="{{ user.profile.telegram|default:''|slice:'1:' }}"
+                           class="form-input"
+                           placeholder="ваш_ник">
+                </div>
+                <p class="form-hint">Публичный никнейм без @. Проверьте, включены ли у вас сообщения от всех.</p>
+            </div>
+
+            <!-- Крипто-кошелёк -->
+            <div class="form-group">
+                <label for="id_crypto_wallet" class="form-label">Крипто-кошелёк (BTC/ETH/USDT)</label>
+                <input type="text" 
+                       id="id_crypto_wallet" 
+                       name="crypto_wallet" 
+                       value="{{ user.profile.crypto_wallet|default:'' }}"
+                       class="form-input"
+                       placeholder="0x… или bc1…">
+                <p class="form-hint">
+                    Адрес кошелька для получения вознаграждений. 
+                    <strong>Внимание:</strong> проверьте сеть (TRC20/ERC20/BEP20).
+                </p>
+            </div>
+
+            <!-- Биография (необязательно) -->
+            <div class="form-group">
+                <label for="id_bio" class="form-label">О себе (необязательно)</label>
+                <textarea 
+                    id="id_bio" 
+                    name="bio" 
+                    class="form-textarea"
+                    placeholder="Расскажите о себе, своих интересах, опыте в краудфандинге…">{{ user.profile.bio }}</textarea>
+                <p class="form-hint">До 300 символов. Отображается в публичном профиле.</p>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{% url 'profile' %}" class="btn btn-secondary">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="#welcome">О нас</a></li>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#">Статистика</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#faq">Как поддержать проект?</a></li>
+                    <li><a href="#faq">Как создать проект?</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Соцсети</h3>
+                <ul>
+                    <li><a href="https://t.me/drbshh" target="_blank">Telegram</a></li>
+                    <li><a href="#">ВКонтакте</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Обновление аватара при выборе файла -->
+<script>
+document.getElementById('id_avatar').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('avatar-preview').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+
+{% endblock %}

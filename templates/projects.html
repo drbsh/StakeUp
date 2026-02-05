@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Проекты | Краудфандинг. Будущее.{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <link rel="stylesheet" href="{% static 'styles/projects.css' %}">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="{% url 'about' %}">О платформе</a>
+    <a href="{% url 'create_project' %}">Создать проект</a>
+    <a href="{% url 'register' %}">Вход/Регистрация</a>
+</header>
+
+<div class="page">
+    <!-- Заголовок -->
+    <div class="hero" style="margin-top: 20px;">
+    </div>
+
+    <!-- Фильтры -->
+    <!-- Фильтры -->
+<div class="filters-section">
+    <div class="filters-container" style="margin-top: 20px;">
+        <!-- Категории -->
+        <div class="filter-group">
+            <h3 class="filter-title">Категория</h3>
+            <div class="filter-chips">
+                <button class="chip chip-active" data-filter="all">Все</button>
+                <button class="chip" data-filter="social">Социальные</button>
+                <button class="chip" data-filter="eco">Экология</button>
+                <button class="chip" data-filter="edu">Образование</button>
+                <button class="chip" data-filter="art">Искусство</button>
+                <button class="chip" data-filter="tech">Технологии</button>
+            </div>
+        </div>
+
+        <!-- Статус -->
+        <div class="filter-group">
+            <h3 class="filter-title">Статус</h3>
+            <div class="filter-chips">
+                <button class="chip chip-active" data-filter="status-all">Все</button>
+                <button class="chip" data-filter="status-active">Активные</button>
+                <button class="chip" data-filter="status-success">Успешные</button>
+                <button class="chip" data-filter="status-expired">Просроченные</button>
+            </div>
+        </div>
+
+        <!-- Сортировка (кастомный dropdown) -->
+        <div class="filter-group">
+            <h3 class="filter-title">Сортировка</h3>
+            <div class="custom-dropdown" id="sortDropdown">
+                <button class="dropdown-toggle chip" aria-haspopup="true" aria-expanded="false">
+                    Популярные
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><button type="button" data-value="popular">Популярные</button></li>
+                    <li><button type="button" data-value="newest">Новые</button></li>
+                    <li><button type="button" data-value="deadline">Ближайший дедлайн</button></li>
+                    <li><button type="button" data-value="funded">Больше собрано</button></li>
+                    <li><button type="button" data-value="needed">Меньше осталось</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- Сортировка -->
+            <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chips = document.querySelectorAll('.chip[data-filter]');
+    const cards = document.querySelectorAll('.project-card');
+    const dropdown = document.getElementById('sortDropdown');
+    const toggleBtn = dropdown.querySelector('.dropdown-toggle');
+    const menuItems = dropdown.querySelectorAll('.dropdown-menu button');
+
+    // === Фильтрация по категории/статусу ===
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const group = chip.closest('.filter-chips');
+            group.querySelectorAll('.chip').forEach(c => c.classList.remove('chip-active'));
+            chip.classList.add('chip-active');
+
+            const catFilter = document.querySelector('.filter-group:nth-of-type(1) .chip-active')?.dataset.filter || 'all';
+            const statFilter = document.querySelector('.filter-group:nth-of-type(2) .chip-active')?.dataset.filter || 'status-all';
+
+            cards.forEach(card => {
+                const cat = card.dataset.category;
+                const stat = card.dataset.status;
+                const show = (catFilter === 'all' || catFilter === cat) &&
+                             (statFilter === 'status-all' || statFilter === `status-${stat}`);
+                card.style.display = show ? 'flex' : 'none';
+            });
+        });
+    });
+
+    // === Сортировка через кастомный dropdown ===
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const value = item.dataset.value;
+            const label = item.textContent;
+            
+            // Обновляем текст кнопки
+            toggleBtn.innerHTML = label + ' <span class="dropdown-arrow">▼</span>';
+            
+            // Закрываем меню
+            dropdown.classList.remove('active');
+            
+            // Логика сортировки (в реальном проекте — AJAX или перезагрузка)
+            console.log('Сортировка по:', value);
+            
+            // Пример: можно вызвать фильтр + сортировку
+            applyFiltersAndSort(value);
+        });
+    });
+
+    // Вспомогательная функция (заглушка)
+    function applyFiltersAndSort(sortBy) {
+        // Здесь позже: отправка формы / fetch / пересортировка DOM
+        // Пока просто лог:
+        console.log('Применена сортировка:', sortBy);
+    }
+
+    // Закрытие по клику вне dropdown (опционально, но удобно)
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    toggleBtn.addEventListener('click', () => {
+        dropdown.classList.toggle('active');
+    });
+});
+</script>
+
+    <!-- Проекты -->
+    <div class="projects-grid">
+        <!-- Карточка 1 -->
+        <div class="project-card" data-category="eco" data-status="active">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-eco">🌿 Экология</span>
+                    <span class="badge badge-days">осталось 24 дня</span>
+                </div>
+                <h3 class="project-name">Эко-парк «Зелёный Лист»</h3>
+                <p class="project-slogan">Создадим первый городской лес в центре мегаполиса</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">1 360 000 ₽</span>
+                        <span class="goal">из 2 000 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/greenpark.png' %}" alt="Эко-парк">
+            </div>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="project-card" data-category="edu" data-status="success">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-edu">🎓 Образование</span>
+                    <span class="badge badge-success">✅ Успешно завершён</span>
+                </div>
+                <h3 class="project-name">Школа будущего</h3>
+                <p class="project-slogan">Бесплатное IT-образование для детей из малых городов</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">5 200 000 ₽</span>
+                        <span class="goal">из 5 000 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Подробнее</a>
+                    <a href="#" class="btn btn-disabled btn-small" disabled>Завершён</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/school.png' %}" alt="Школа">
+            </div>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="project-card" data-category="social" data-status="active">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-social">🤝 Социальные</span>
+                    <span class="badge badge-days">осталось 8 дней</span>
+                </div>
+                <h3 class="project-name">Мост надежды</h3>
+                <p class="project-slogan">Восстановим мост в отдалённом селе — вернём связь с миром</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 92%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">828 000 ₽</span>
+                        <span class="goal">из 900 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/bridge.png' %}" alt="Мост">
+            </div>
+        </div>
+
+        <!-- Карточка 4 -->
+        <div class="project-card" data-category="art" data-status="active">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-art">🎨 Искусство</span>
+                    <span class="badge badge-days">осталось 41 день</span>
+                </div>
+                <h3 class="project-name">Арт-резиденция</h3>
+                <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 27%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">270 000 ₽</span>
+                        <span class="goal">из 1 000 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/art.png' %}" alt="Резиденция">
+            </div>
+        </div>
+
+        <!-- Карточка 5 (повтор для демонстрации сетки) -->
+        <div class="project-card" data-category="tech" data-status="active">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-tech">🚀 Технологии</span>
+                    <span class="badge badge-days">осталось 15 дней</span>
+                </div>
+                <h3 class="project-name">OpenMed — диагностика для всех</h3>
+                <p class="project-slogan">AI-ассистент для первичной диагностики в отдалённых регионах</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 43%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">860 000 ₽</span>
+                        <span class="goal">из 2 000 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">Узнать больше</a>
+                    <a href="#" class="btn btn-secondary btn-small">Пожертвовать</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/ai.png' %}" alt="AI-диагностика">
+            </div>
+        </div>
+
+        <!-- Карточка 6 -->
+        <div class="project-card" data-category="social" data-status="expired">
+            <div class="project-text">
+                <div class="project-meta">
+                    <span class="badge badge-social">🤝 Социальные</span>
+                    <span class="badge badge-expired">❌ Не набрано</span>
+                </div>
+                <h3 class="project-name">Приют для бездомных животных</h3>
+                <p class="project-slogan">Строительство нового корпуса приюта в Подмосковье</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 35%"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="collected">700 000 ₽</span>
+                        <span class="goal">из 2 000 000 ₽</span>
+                    </div>
+                </div>
+                <div class="project-buttons">
+                    <a href="#" class="btn btn-primary btn-small">История проекта</a>
+                    <a href="#" class="btn btn-disabled btn-small" disabled>Окончен</a>
+                </div>
+            </div>
+            <div class="project-image">
+                <img src="{% static 'Image/pets.png' %}" alt="Приют">
+            </div>
+        </div>
+    </div>
+
+    <!-- Пагинация (опционально) -->
+    <div class="pagination">
+        <a href="#" class="btn btn-secondary">&laquo; Назад</a>
+        <span class="page-num active">1</span>
+        <a href="#" class="page-num">2</a>
+        <a href="#" class="page-num">3</a>
+        <a href="#" class="btn btn-secondary">Вперёд &raquo;</a>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="{% url 'about' %}">О нас</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#">Как создать проект?</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Соцсети</h3>
+                <ul>
+                    <li><a href="https://t.me/drbshh" target="_blank">Telegram</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+{% endblock %}

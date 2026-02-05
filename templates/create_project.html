@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Создать проект | Краудфандинг. Будущее.{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'about' %}">О платформе</a>
+    <a href="{% url 'projects' %}">Проекты</a>
+    <a href="{% url 'create_project' %}">Создать проект</a>
+    <a href="{% url 'profile' %}">Профиль</a>
+</header>
+
+<div class="page edit-profile-page">
+    <div class="hero hero_editprof">
+        <h1>Создать проект</h1>
+        <p class="subtitle">Запустите краудфандинговую кампанию за 5 минут</p>
+
+        <form method="post" class="edit-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Обложка проекта -->
+            <div class="form-group">
+                <label class="form-label">Обложка проекта</label>
+                <div class="avatar-upload">
+                    <img id="cover-preview"
+                         src="{% static 'Image/project-placeholder.png' %}"
+                         alt="Предпросмотр обложки"
+                         class="avatar-preview"
+                         style="width: 200px; height: 120px; border-radius: 12px;">
+                    <label for="id_cover" class="btn btn-secondary btn-upload">Загрузить обложку</label>
+                    <input type="file" id="id_cover" name="cover" accept="image/*" class="avatar-input">
+                    <p class="form-hint">Рекомендуется: 1200×630 px (16:9). JPG, PNG до 5 МБ.</p>
+                </div>
+            </div>
+
+            <!-- Название -->
+            <div class="form-group">
+                <label for="id_title" class="form-label">Название проекта</label>
+                <input type="text"
+                       id="id_title"
+                       name="title"
+                       class="form-input"
+                       placeholder="Например, «Эко-парк в центре города»"
+                       required>
+            </div>
+
+            <!-- Краткий слоган -->
+            <div class="form-group">
+                <label for="id_slogan" class="form-label">Краткий слоган (до 80 символов)</label>
+                <input type="text"
+                       id="id_slogan"
+                       name="slogan"
+                       class="form-input"
+                       placeholder="Создадим первый городской лес"
+                       maxlength="80"
+                       required>
+                <p class="form-hint">Отображается в карточке проекта. Сделайте его цепляющим!</p>
+            </div>
+
+            <!-- Описание -->
+            <div class="form-group">
+                <label for="id_description" class="form-label">Описание проекта</label>
+                <textarea
+                    id="id_description"
+                    name="description"
+                    class="form-textarea"
+                    placeholder="Расскажите подробно: зачем, кому, как. Поделитесь историей и мотивацией.">{{ project.description }}</textarea>
+                <p class="form-hint">Минимум 200 символов. Поддерживается Markdown (жирный, списки).</p>
+            </div>
+
+            <!-- Цель -->
+            <div class="form-group">
+                <label class="form-label">Финансовая цель</label>
+                <div class="goal-inputs" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 180px;">
+                        <label for="id_goal_amount" class="form-label" style="font-size: 16px;">Сумма (USDT)</label>
+                        <input type="number"
+                               id="id_goal_amount"
+                               name="goal_amount"
+                               class="form-input"
+                               placeholder="5000"
+                               min="100"
+                               step="100"
+                               required>
+                    </div>
+                    <div style="flex: 1; min-width: 180px;">
+                        <label for="id_deadline" class="form-label" style="font-size: 16px;">Срок сбора</label>
+                        <input type="date"
+                               id="id_deadline"
+                               name="deadline"
+                               class="form-input"
+                               required>
+                        <p class="form-hint" style="margin-top: 4px;">Максимум — 180 дней от сегодня.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Категория -->
+            <div class="form-group">
+                <label for="id_category" class="form-label">Категория</label>
+                <select id="id_category" name="category" class="form-input" required>
+                    <option value="">Выберите категорию</option>
+                    <option value="art">Искусство и культура</option>
+                    <option value="social">Социальные проекты</option>
+                    <option value="ecology">Экология</option>
+                    <option value="education">Образование</option>
+                    <option value="tech">Технологии и инновации</option>
+                    <option value="community">Сообщество и спорт</option>
+                </select>
+            </div>
+
+            <!-- Соцсети (опционально) -->
+            <div class="form-group">
+                <label class="form-label">Ссылки (необязательно)</label>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">t.me/</span>
+                        <input type="text"
+                               name="telegram"
+                               class="form-input"
+                               placeholder="ваш_канал"
+                               style="padding-left: 70px;">
+                    </div>
+                    <input type="url"
+                           name="website"
+                           class="form-input"
+                           placeholder="https://ваш-сайт.ru">
+                </div>
+                <p class="form-hint">Telegram-канал с обновлениями и сайт проекта.</p>
+            </div>
+
+            <!-- Публичность -->
+            <div class="form-group">
+                <label class="form-label">Публичность</label>
+                <div class="form-check" style="gap: 10px; margin-top: 8px;">
+                    <input type="checkbox" id="id_is_draft" name="is_draft" class="form-check-input">
+                    <label for="id_is_draft" class="form-check-label">Создать как черновик (не публиковать сразу)</label>
+                </div>
+                <p class="form-hint">
+                    Черновик можно отредактировать и опубликовать позже в личном кабинете.
+                </p>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Создать проект</button>
+                <a href="{% url 'projects' %}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="{% url 'about' %}">О нас</a></li>
+                    <li><a href="{% url 'projects' %}">Проекты</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#">Как создать проект?</a></li>
+                    <li><a href="#">Требования к контенту</a></li>
+                    <li><a href="#">Частые вопросы</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Превью обложки при загрузке -->
+<script>
+document.getElementById('id_cover').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('cover-preview').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Установить минимальную и максимальную дату для дедлайна
+const today = new Date();
+const minDate = today.toISOString().split('T')[0];
+const maxDate = new Date();
+maxDate.setDate(today.getDate() + 180);
+document.getElementById('id_deadline').min = minDate;
+document.getElementById('id_deadline').max = maxDate.toISOString().split('T')[0];
+</script>
+
+<style>
+/* Доп. стили только для этой страницы */
+.avatar-preview {
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    accent-color: #000;
+}
+.goal-inputs label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+</style>
+
+{% endblock %}

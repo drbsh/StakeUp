@@ -39,6 +39,9 @@
     padding: 20px 70px;
     margin-top: 100px; 
 }
+.hero.hero_editprof {
+    margin-top: 50px;
+}
         .hero img.logo {
             height: 300px;
             width: auto;
@@ -249,6 +252,7 @@
     gap: 32px;
     width: 100%;
     padding: 0 80px; 
+    box-sizing: border-box;
 }
 
 /* Одна карточка — квадрат */
@@ -258,9 +262,10 @@
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    aspect-ratio: 1 / 1; /* ← делает карточку квадратом */
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
+    position: relative; /* важно для overflow hidden */
 }
 
 .project-card:hover {
@@ -268,14 +273,16 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Текстовая часть (название + слоган) */
 .project-text {
-    padding: 20px;
+    margin-top: 10px;
     text-align: center;
-    flex: 1;
+    flex: 1 0 50%; /* занимает ровно 50%, не меньше */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #EEEEEE; /* на случай, если картинка прозрачная */
 }
 
 .project-name {
@@ -323,19 +330,26 @@
 }
 /* Изображение — занимает ~60% карточки */
 .project-image {
-    height: 50%;
+    margin-top: 12px;
+    flex: 1 0 50%;     /* ровно 50% высоты */
     width: 100%;
-    background: #f5f5f5;
+    overflow: hidden;
+    border-radius: 22px; 
 }
 
 .project-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover;        /* заполняет без искажений */
     display: block;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
 }
+
 /* Общий контейнер */
 .faq-content {
+    margin-top: 50px;
+    margin-bottom: 50px;
     max-width: 800px;
     width: 100%;
     padding: 0 20px;
@@ -496,7 +510,7 @@
 }
 
 .footer-column a:hover {
-    color: #fff;
+    color: #333;
     text-decoration: underline;
 }
 
@@ -560,4 +574,706 @@ input[type="password"]::-ms-clear {
 /* Для WebKit (Chrome, Safari, Edge Chromium) */
 input[type="password"] {
     -webkit-text-security: disc; /* сохраняет точки */
+}
+/* ——— Секция "Как пользоваться платформой" ——— */
+#usage {
+    padding-top: 100px;
+    padding-bottom: 80px;
+    background-color: #ffffff;
+}
+
+.usage-container {
+    max-width: 1100px;
+    width: 100%;
+    padding: 0 80px;
+    box-sizing: border-box;
+}
+
+.usage-title {
+    font-size: 44px;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.usage-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.usage-card {
+    background: #fafafa;
+    border-radius: 20px;
+    padding: 36px 32px;
+    text-align: center;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.usage-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+    border-color: #e0e0e0;
+}
+
+.usage-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    color: #000;
+}
+
+.usage-card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 16px;
+}
+
+.usage-card-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #555;
+    margin: 0 0 20px;
+}
+
+.usage-tag {
+    display: inline-block;
+    background: #eef7ff;
+    color: #2c7be5;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+}
+
+/* Анимация при наведении на иконку */
+.usage-card:hover .usage-icon {
+    background: #eef7ff;
+    transform: scale(1.08);
+    transition: all 0.6s ease;
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+    .usage-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .usage-title {
+        font-size: 36px;
+    }
+
+    .usage-cards {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .usage-card {
+        padding: 32px 24px;
+    }
+
+    .usage-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .usage-card-title {
+        font-size: 22px;
+    }
+
+    .usage-card-text {
+        font-size: 16px;
+    }
+}   
+
+#projects {
+    align-items: flex-start; /* Контент прижимается к левому краю */
+    justify-content: flex-start;
+    padding-top: 100px; /* Отступ под fixed-шапку */
+    padding-bottom: 60px;
+}
+
+/* Сетка карточек */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 32px;
+    width: 100%;
+    padding: 0 80px;
+}
+
+/* Одна карточка — квадрат */
+.project-card {
+    background: #EEEEEE;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.6s ease, box-shadow 0.3s ease;
+    aspect-ratio: 1 / 1; /* Карточка квадратная */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем содержимое */
+    padding: 24px;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Иконка */
+.project-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    margin-top: 20px;
+    border-radius: 50%;
+    margin-bottom: 20px; /* Отступ до текста */
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.project-card:hover .project-icon {
+    transform: scale(1.1);
+    background: #e0e0e0;
+}
+
+/* Текстовая часть */
+.project-text {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.project-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 10px;
+    line-height: 1.3;
+}
+
+.project-slogan {
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Адаптив */
+@media (max-width: 480px) {
+    .projects-grid {
+        padding: 0 20px;
+        gap: 24px;
+    }
+    .project-card {
+        padding: 20px;
+    }
+    .project-icon {
+        width: 64px;
+        height: 64px;
+    }
+    .project-name {
+        font-size: 18px;
+    }
+    .project-slogan {
+        font-size: 15px;
+    }
+}
+
+/* Преимущества */
+#advantages {
+    padding-top: 60px;
+    padding-bottom: 80px;
+    background-color: #ffffff;
+}
+
+.advantages-container {
+    max-width: 1100px;
+    width: 100%;
+    padding: 0 80px;
+    box-sizing: border-box;
+}
+
+.advantages-title {
+    font-size: 44px;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.advantage-card {
+    background: #fafafa;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid #f0f0f0;
+}
+
+.advantage-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    border-color: #e0e0e0;
+}
+
+.advantage-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    color: #000;
+    transition: transform 0.3s ease;
+}
+
+.advantage-card:hover .advantage-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.advantage-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 12px;
+}
+
+.advantage-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+    .advantages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .advantages-container {
+        padding: 0 20px;
+    }
+    .advantages-title {
+        font-size: 36px;
+    }
+    .advantages-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .advantage-card {
+        padding: 28px 20px;
+    }
+    .advantage-icon {
+        font-size: 28px;
+    }
+    .advantage-title {
+        font-size: 19px;
+    }
+    .advantage-text {
+        font-size: 15px;
+    }
+}
+.profile-page {
+    margin-top: 120px;
+    padding-bottom: 60px;
+}
+
+.profile-container {
+    max-width: 1100px;
+    width: 100%;
+    padding: 0 80px;
+    display: flex;
+    gap: 48px;
+}
+
+.profile-main {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 8px;
+}
+
+.profile-status {
+    font-size: 18px;
+    font-weight: 500;
+    color: #999;
+    margin: 0 0 32px;
+}
+
+.profile-info {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 16px;
+    font-size: 18px;
+    gap: 12px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #333;
+    min-width: 160px;
+}
+
+.info-value {
+    color: #666;
+    flex: 1;
+}
+
+.profile-link {
+    color: #2c7be5;
+    text-decoration: none;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+}
+
+.profile-edit-btn {
+    padding: 14px 36px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Сайдбар */
+.profile-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stat-card {
+    background: #fafafa;
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    border-color: #e0e0e0;
+}
+
+.stat-icon {
+    font-size: 36px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 50%;
+    color: #000;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #666;
+    margin: 0 0 6px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 4px;
+}
+
+.stat-desc {
+    font-size: 15px;
+    color: #999;
+    margin: 0;
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+    .profile-container {
+        flex-direction: column;
+        padding: 0 40px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 0 20px;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .info-label {
+        min-width: auto;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 32px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+}
+/* Стиль прозрачной красной кнопки */
+.btn-outline-danger {
+    background-color: transparent;
+    color: #e53935;
+    border: 2px solid #e53935;
+    padding: 12px 26px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+    background-color: rgba(229, 57, 53, 0.08); /* лёгкая подсветка при наведении */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.15);
+}
+
+.btn-outline-danger:active {
+    transform: translateY(0);
+}
+
+/* Медиазапросы (сохраняем адаптивность) */
+@media (max-width: 600px) {
+    .profile-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .profile-edit-btn,
+    .profile-delete-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
+.edit-profile-page {
+    margin-top: 80px;
+    padding-bottom: 60px;
+}
+
+.edit-profile-container {
+    max-width: 700px;
+    width: 100%;
+    padding: 0 40px;
+    margin: 0 auto;
+}
+
+.edit-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+    margin: 0 0 12px;
+}
+
+.edit-subtitle {
+    font-size: 22px;
+    font-weight: 500;
+    color: #999;
+    text-align: center;
+    margin: 0 0 40px;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 16px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    background-color: #f9f9f9;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #000;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-hint {
+    font-size: 14px;
+    color: #999;
+    margin: 4px 0 0;
+}
+
+/* Аватар */
+.avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn-upload {
+    padding: 10px 24px;
+    font-size: 16px;
+}
+
+.avatar-input {
+    display: none;
+}
+
+/* Telegram с префиксом */
+.input-with-prefix {
+    position: relative;
+    display: flex;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 17px;
+    pointer-events: none;
+}
+
+#id_telegram {
+    padding-left: 36px;
+}
+
+/* Кнопки */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .edit-profile-container {
+        padding: 0 20px;
+    }
+    .edit-title { font-size: 30px; }
+    .edit-subtitle { font-size: 20px; }
+    .form-actions {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
 }

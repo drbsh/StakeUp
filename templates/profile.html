@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'about' %}">Главная</a>
+    <a href="{% url 'projects' %}">Проекты</a>
+    <a href="{% url 'register' %}">Создать проект</a>
+    <a href="{% url 'register' %}">Выход</a>
+</header>
+
+<div class="page profile-page">
+    <div class="profile-container">
+        <!-- Левая колонка: аватар + данные -->
+        <div class="profile-main">
+            <!-- Аватар -->
+            <div class="profile-avatar">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="Аватар" class="avatar-img">
+                {% else %}
+                    <img src="{% static 'Image/avatar.png' %}" alt="Аватар по умолчанию" class="avatar-img">
+                {% endif %}
+            </div>
+
+            <!-- Имя и статус -->
+            <h1 class="profile-name">
+                {{ user.get_full_name|default:user.username }}
+            </h1>
+            <p class="profile-status">Пользователь платформы</p>
+
+            <!-- Персональные данные -->
+            <div class="profile-info">
+                <div class="info-row">
+                    <span class="info-label">📧 Email:</span>
+                    <span class="info-value">{{ user.email|default:"— не указан" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">📅 На платформе с:</span>
+                    <span class="info-value">
+                        {{ user.date_joined|date:"d E Y" }}
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">📍 Возраст:</span>
+                    <span class="info-value">{{ user.profile.city|default:"—" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">🔗 Telegram:</span>
+                    <span class="info-value">
+                        {% if user.profile.telegram %}
+                            <a href="https://t.me/{{ user.profile.telegram|slice:'1:' }}" target="_blank" class="profile-link">
+                                {{ user.profile.telegram }}
+                            </a>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Кнопка редактирования -->
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary profile-edit-btn">
+                Редактировать профиль
+            </a>
+                <!-- Кнопка удаления (прозрачная, с красной рамкой) -->
+            <button type="button" class="btn btn-outline-danger profile-delete-btn" onclick="confirmDelete()">
+                Удалить профиль
+            </button>
+        </div>
+
+        <!-- Правая колонка: статистика -->
+        <div class="profile-sidebar">
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-content">
+                    <h3 class="stat-title">Инвестировано</h3>
+                    <p class="stat-value">
+                        {{ user.total_invested|default:0 }} ₽
+                        <!-- или BTC/USDT, если крипта: -->
+                        <!-- {{ user.total_invested_crypto|floatformat:4 }} BTC -->
+                    </p>
+                    <p class="stat-desc">в {{ user.backed_projects_count|default:0 }} проект{{ user.backed_projects_count|pluralize:"е,ах,ах" }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-content">
+                    <h3 class="stat-title">Создано проектов</h3>
+                    <p class="stat-value">{{ user.owned_projects_count|default:0 }}</p>
+                    <p class="stat-desc">
+                        {% if user.owned_projects_count == 1 %}
+                            активный проект
+                        {% elif user.owned_projects_count|add:0 > 1 and user.owned_projects_count|add:0 < 5 %}
+                            активных проекта
+                        {% else %}
+                            активных проектов
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="#welcome">О нас</a></li>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#">Статистика</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#faq">Как поддержать проект?</a></li>
+                    <li><a href="#faq">Как создать проект?</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3 class="footer-title">Соцсети</h3>
+                <ul>
+                    <li><a href="https://t.me/drbshh" target="_blank">Telegram</a></li>
+                    <li><a href="#">ВКонтакте</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+{% endblock %}

@@ -1,0 +1,546 @@
+.filters-section {
+    width: 100%;
+    padding: 0 80px 40px;
+    background: #fafafa;
+}
+
+.filters-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.filter-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.chip {
+    padding: 8px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #555;
+}
+
+.chip:hover {
+    background: #e0e0e0;
+}
+
+.chip-active,
+.chip:active {
+    background: #000;
+    color: white;
+}
+
+.sort-select {
+    width: 100%;
+    max-width: 220px;
+    padding: 12px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    background: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3E%3Cpath fill='%23666' d='M12 0L6 6 0 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+/* ============== Кастомный дропдаун ============== */
+/* ============== Кастомный дропдаун (фиксированная ширина) ============== */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 140px; /* ← фиксируем минимальную ширину всего блока */
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 40px; /* фиксированная высота */
+    padding: 0 18px;
+    font-size: 15px;
+    font-weight: 500;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.dropdown-toggle span { /* текст + стрелка — чтобы текст не растягивал */
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.dropdown-arrow {
+    flex: 0 0 auto;
+    font-size: 10px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    background: #e0e0e0;
+    outline: none;
+}
+
+.dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    /* Ширина = как у toggle, но не меньше 220px */
+    min-width: 220px;
+    width: max-content;
+    margin: 8px 0 0;
+    padding: 8px 0;
+    list-style: none;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Запрещаем меню быть уже toggle */
+.custom-dropdown:hover .dropdown-menu,
+.custom-dropdown:focus-within .dropdown-menu,
+.custom-dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    width: 100%; /* ← растягиваем на ширину родителя (220px+) */
+}
+
+.dropdown-menu li {
+    margin: 0;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: #555;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-menu button:hover {
+    background: #f8f8f8;
+    color: #000;
+}
+
+.dropdown-menu button:focus {
+    outline: none;
+    background: #f0f0f0;
+}
+/* ============== Дополнения к карточке ============== */
+.project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.badge {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.badge-eco { background: #e8f5e9; color: #2e7d32; }
+.badge-edu { background: #e3f2fd; color: #1565c0; }
+.badge-social { background: #f3e5f5; color: #7b1fa2; }
+.badge-art { background: #fff3e0; color: #ef6c00; }
+.badge-tech { background: #e0f7fa; color: #006064; }
+.badge-days { background: #e8f5e9; color: #2e7d32; }
+.badge-success { background: #e8f5e9; color: #2e7d32; }
+.badge-expired { background: #ffebee; color: #c62828; }
+
+.project-progress {
+    margin: 16px 0 20px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4caf50;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+.progress-stats {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.collected { font-weight: 600; color: #000; }
+
+/* Одна карточка — прямоугольник 1:1.3 (ширина:высота) или фикс высоты */
+.project-card {
+    background: #EEEEEE;
+    border-radius: 22px;
+    overflow: hidden; /* Обрезаем содержимое для закругления */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    height: 580px; /* Фиксированная высота */
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Изображение — 40% высоты карточки */
+.project-image {
+    margin-top: 10px;
+    flex: 1 0 50%;     /* ровно 50% высоты */
+    width: 100%; /* Растягиваем на всю ширину */
+    overflow: hidden; /* Обрезаем изображение для закругления */
+    border-radius: 22px; /* Закругление верхних углов */
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Масштабируем, сохраняя пропорции */
+    display: block;
+    border-radius: 22px; 
+}
+
+/* Текстовая часть — 60% высоты */
+.project-text {
+    height: 60%; /* Оставшиеся 60% */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: #EEEEEE; /* Фон для читаемости */
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .project-card {
+        width: 100%; /* Полная ширина на меньших экранах */
+        height: 420px;
+    }
+    .project-image {
+        height: 40%; /* Сохраняем пропорции */
+    }
+    .project-text {
+        height: 60%;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-card {
+        height: 380px;
+    }
+    .project-text {
+        padding: 12px;
+    }
+}
+
+/* ============== Пагинация ============== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 50px;
+    padding: 0 80px 20px;
+}
+
+.page-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.page-num:hover,
+.page-num.active {
+    background: #000;
+    color: white;
+}
+
+/* ============== Адаптив ============== */
+@media (max-width: 900px) {
+    .filters-container {
+        flex-direction: column;
+    }
+    .sort-select {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .filters-section {
+        padding: 0 20px 30px;
+    }
+    .projects-grid {
+        padding: 0 20px;
+    }
+    .pagination {
+        padding: 0 20px 20px;
+    }
+}
+@media (max-width: 768px) {
+    .project-card {
+        height: 420px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-card {
+        height: 380px;
+    }
+    .project-text {
+        padding: 16px;
+    }
+}
+
+
+.project-detail-page {
+    margin-top: 80px;
+    padding-bottom: 60px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-detail-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+    margin: 0 0 32px;
+    padding: 0 20px;
+}
+
+.project-detail-image {
+    width: 100%;
+    margin-bottom: 40px;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.project-detail-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.project-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.project-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.project-description p {
+    margin: 0 0 24px;
+}
+
+.project-description h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    margin: 32px 0 16px;
+}
+
+.project-benefits {
+    padding-left: 24px;
+    list-style-type: none;
+}
+
+.project-benefits li {
+    position: relative;
+    margin-bottom: 12px;
+    padding-left: 28px;
+}
+
+.project-benefits li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.goal-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 16px;
+    border-left: 4px solid #4caf50;
+}
+
+/* Статистика */
+.project-stats {
+    background: #fafafa;
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    font-size: 18px;
+}
+
+.stat-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #000;
+}
+
+.project-progress {
+    margin-top: 24px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4caf50;
+    border-radius: 5px;
+    transition: width 0.6s ease;
+}
+
+.progress-caption {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #666;
+}
+
+.goal-amount {
+    font-weight: 600;
+    color: #000;
+}
+
+/* Кнопки */
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.btn-large {
+    padding: 16px 40px;
+    font-size: 19px;
+    font-weight: 600;
+    min-width: 200px;
+    display: inline-block;
+    text-align: center; 
+}
+
+@media (max-width: 600px) {
+    .project-detail-title {
+        font-size: 28px;
+    }
+    .project-actions {
+        flex-direction: column;
+    }
+    .btn-large {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}

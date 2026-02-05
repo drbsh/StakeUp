@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Поддержать проект | {{ project.title }}{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'projects' %}">Проекты</a>
+    <a href="{% url 'about' %}">О платформе</a>
+    <a href="{% url 'profile' %}">Профиль</a>
+</header>
+
+<div class="page edit-profile-page">
+    <div class="hero hero_editprof">
+        <!-- Заголовок -->
+        <h1>Поддержать проект</h1>
+        <p class="subtitle">{{ project.title }}</p>
+
+        <!-- Форма оплаты -->
+        <form method="post" class="edit-form" id="donate-form">
+            {% csrf_token %}
+            <input type="hidden" name="project_id" value="{{ project.id }}">
+
+            <!-- Выбор суммы -->
+            <div class="form-group">
+                <label class="form-label" style="margin-bottom: 10px; ">Сумма пожертвования</label>
+                <div class="donation-amounts">
+                    <button type="button" class="amount-btn active" data-amount="10">10 USDT</button>
+                    <button type="button" class="amount-btn" data-amount="25">25 USDT</button>
+                    <button type="button" class="amount-btn" data-amount="50">50 USDT</button>
+                    <button type="button" class="amount-btn custom" data-amount="custom">Другая</button>
+                </div>
+                <input type="number"
+                       id="id_amount"
+                       name="amount"
+                       class="form-input"
+                       placeholder="Введите сумму"
+                       min="5"
+                       step="0.01"
+                       value="10"
+                       required>
+                <p class="form-hint">
+                    Минимум — <strong>5 USDT</strong>. Поддержка проекта — это вклад в его успех.
+                </p>
+            </div>
+
+            <!-- Выбор криптовалюты -->
+            <div class="form-group">
+                <label class="form-label">Валюта оплаты</label>
+                <div class="crypto-selector">
+                    <!-- BTC -->
+                    <label class="crypto-option">
+                        <input type="radio" name="currency" value="BTC" checked>
+                        <span class="crypto-icon">₿</span>
+                        <span class="crypto-name">Bitcoin (BTC)</span>
+                        <span class="crypto-desc">Сеть: Bitcoin</span>
+                    </label>
+
+                    <!-- ETH -->
+                    <label class="crypto-option">
+                        <input type="radio" name="currency" value="ETH">
+                        <span class="crypto-icon">Ξ</span>
+                        <span class="crypto-name">Ethereum (ETH)</span>
+                        <span class="crypto-desc">Сеть: Ethereum</span>
+                    </label>
+
+                    <!-- USDT (TRC20) -->
+                    <label class="crypto-option">
+                        <input type="radio" name="currency" value="USDT_TRC20">
+                        <span class="crypto-icon">$</span>
+                        <span class="crypto-name">Tether (USDT)</span>
+                        <span class="crypto-desc">Сеть: TRON (TRC20)</span>
+                    </label>
+
+                    <!-- USDT (ERC20) -->
+                    <label class="crypto-option">
+                        <input type="radio" name="currency" value="USDT_ERC20">
+                        <span class="crypto-icon">$</span>
+                        <span class="crypto-name">Tether (USDT)</span>
+                        <span class="crypto-desc">Сеть: Ethereum (ERC20)</span>
+                    </label>
+                </div>
+                <p class="form-hint">
+                    ⚠️ Убедитесь, что ваш кошелёк поддерживает выбранную сеть. 
+                    Возврат средств невозможен при ошибке в адресе.
+                </p>
+            </div>
+
+            <!-- Email (для квитанции) -->
+            <div class="form-group">
+                <label for="id_email_receipt" class="form-label">Email для чека</label>
+                <input type="email"
+                       id="id_email_receipt"
+                       name="email"
+                       class="form-input"
+                       value="{{ user.email|default:'' }}"
+                       placeholder="Ваш email (необязательно)">
+                <p class="form-hint">
+                    На этот адрес придёт квитанция и статус платежа. Не обязателен, но рекомендуется.
+                </p>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Продолжить к оплате</button>
+                <a href="{% url 'project_info' %}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+
+        <!-- Инфо: как это работает -->
+        <div class="donation-info">
+            <h3>Как проходит оплата?</h3>
+            <ol>
+                <li>Вы вводите сумму и выбираете криптовалюту</li>
+                <li>Наш сервер создаёт инвойс в <strong>BitPay</strong></li>
+                <li>Вы попадаете на защищённую страницу BitPay для оплаты</li>
+                <li>После оплаты — вы получите чек и благодарность автора!</li>
+            </ol>
+            <p class="form-hint" style="margin-top: 16px;">
+                Все платежи обрабатываются через <a href="https://bitpay.com" target="_blank">BitPay</a> — 
+                платформа соответствует стандартам PCI DSS. Мы не храним приватные ключи или seed-фразы.
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="{% static 'Image/s.png' %}" alt="Логотип" class="footer-logo">
+            <p class="footer-slogan">Платформа для поддержки идей и инициатив</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-column">
+                <h3 class="footer-title">Платформа</h3>
+                <ul>
+                    <li><a href="{% url 'about' %}">О нас</a></li>
+                    <li><a href="{% url 'projects' %}">Проекты</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Поддержка</h3>
+                <ul>
+                    <li><a href="#">FAQ по оплате</a></li>
+                    <li><a href="#">Безопасность платежей</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
+    </div>
+</footer>
+
+<style>
+/* ——— Стили для donate.html (встроенные, можно вынести в CSS) ——— */
+.donation-amounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.amount-btn {
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.amount-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.amount-btn.active {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+}
+
+.amount-btn.custom {
+    background-color: transparent;
+    border-style: dashed;
+}
+
+.crypto-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.crypto-option {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.crypto-option:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+.crypto-option input[type="radio"] {
+    margin-right: 16px;
+    width: 18px;
+    height: 18px;
+    accent-color: #000;
+}
+
+.crypto-icon {
+    font-size: 22px;
+    margin-right: 12px;
+    width: 32px;
+    text-align: center;
+}
+
+.crypto-name {
+    font-weight: 600;
+    color: #000;
+    margin-right: 12px;
+}
+
+.crypto-desc {
+    font-size: 14px;
+    color: #777;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    accent-color: #000;
+}
+
+.donation-info {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+    text-align: left;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.donation-info h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.donation-info ol {
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 16px;
+    color: #555;
+}
+
+.donation-info li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+</style>
+
+<script>
+// Логика кнопок суммы
+document.querySelectorAll('.amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const amount = this.dataset.amount;
+        const input = document.getElementById('id_amount');
+        
+        if (amount === 'custom') {
+            input.focus();
+        } else {
+            input.value = amount;
+        }
+    });
+});
+
+// Валидация формы перед отправкой
+document.getElementById('donate-form').addEventListener('submit', function(e) {
+    const amount = parseFloat(document.getElementById('id_amount').value);
+    if (isNaN(amount) || amount < 5) {
+        e.preventDefault();
+        alert('Минимальная сумма — 5 USDT');
+        return false;
+    }
+
+    const currency = document.querySelector('input[name="currency"]:checked');
+    if (!currency) {
+        e.preventDefault();
+        alert('Пожалуйста, выберите валюту');
+        return false;
+    }
+});
+</script>
+
+{% endblock %}

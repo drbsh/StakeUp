@@ -9,9 +9,9 @@
         <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
     </a>
     <a href="{% url 'index' %}">Главная</a>
-    <a href="#about">Проекты</a>
-    <a href="#">Регистрация</a>
-    <a href="#">Вход/Регистрация</a>
+    <a href="{% url 'projects' %}">Проекты</a>
+    <a href="{% url 'register' %}">Создать проект</a>
+    <a href="{% url 'register' %}">Вход/Регистрация</a>
 </header>
 
 <!-- Страницы -->
@@ -22,7 +22,7 @@
         <p class="subtitle">Прозрачный краудфандинг.</p>
         <div class="buttons">
             <a href="#projects" class="btn btn-primary">Создать проект</a>
-            <a href="#welcome" class="btn btn-secondary">Смотреть проекты</a>
+            <a href="{% url 'projects' %}" class="btn btn-secondary">Смотреть проекты</a>
         </div>
     </div>
 </div>
@@ -34,54 +34,102 @@
     </div>
 </div>
 
-<div class="page" id="projects" style="display: none;">
-    <!-- Позже заполните -->
-    <h2 style="text-align: center; padding-top: 100px;">Проекты — скоро</h2>
-</div>
 <div class="page" id="projects">
     <div class="projects-grid">
         <!-- Карточка 1 -->
         <div class="project-card">
+            <div class="project-icon">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.13401 2 5 5.13401 5 9V15C5 18.866 8.13401 22 12 22C15.866 22 19 18.866 19 15V9C19 5.13401 15.866 2 12 2Z" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 6V12" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 12H12.01" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
             <div class="project-text">
                 <h3 class="project-name">Гибкость</h3>
                 <p class="project-slogan">Платформа подходит для любых видов проектов и позволяет привлекать поддержку со всей России.</p>
-            </div>
-            <div class="project-image">
-                <img src="{% static 'Image/greenpark.png' %}" alt="Эко-парк">
             </div>
         </div>
 
         <!-- Карточка 2 -->
         <div class="project-card">
-            <div class="project-text">
-                <h3 class="project-name">Безопасность.</h3>
-                <p class="project-slogan">Все платежи защищены, прозрачный процесс возврата средств и проверка подлинности проектов.</p>
+            <div class="project-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H10C8.89543 2 8 2.89543 8 4V6C8 7.10457 8.89543 8 10 8H14C15.1046 8 16 7.10457 16 6V4C16 2.89543 15.1046 2 14 2Z" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M6 10V14C6 15.1046 6.89543 16 8 16H10C11.1046 16 12 15.1046 12 14V10C12 8.89543 11.1046 8 10 8H8C6.89543 8 6 8.89543 6 10Z" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M18 10V14C18 15.1046 17.1046 16 16 16H14C12.8954 16 12 15.1046 12 14V10C12 8.89543 12.8954 8 14 8H16C17.1046 8 18 8.89543 18 10Z" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
-            <div class="project-image">
-                <img src="{% static 'Image/school.png' %}" alt="Школа">
+            <div class="project-text">
+                <h3 class="project-name">Безопасность</h3>
+                <p class="project-slogan">Все платежи защищены, прозрачный процесс возврата средств и проверка подлинности проектов.</p>
             </div>
         </div>
 
         <!-- Карточка 3 -->
         <div class="project-card">
-            <div class="project-text">
-                <h3 class="project-name">Поддержка.</h3>
-                <p class="project-slogan">Все платежи защищены, прозрачный процесс возврата средств и проверка подлинности проектов.</p>
+            <div class="project-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21C15.866 21 19 17.866 19 14C19 10.134 15.866 7 12 7C8.13401 7 5 10.134 5 14C5 17.866 8.13401 21 12 21Z" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 11C8 9.89543 8.89543 9 10 9H14C15.1046 9 16 9.89543 16 11V14" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
-            <div class="project-image">
-                <img src="{% static 'Image/bridge.png' %}" alt="Мост">
+            <div class="project-text">
+                <h3 class="project-name">Поддержка</h3>
+                <p class="project-slogan">Авторы получают консультации, аналитику и техническую помощь на всех этапах кампании.</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="page" id="projects">
-    <div class="projects-header">
-        <h2 class="projects-title">Детали использования</h2>
-        <p class="projects-subtitle2">Для создателей: после регистрации вы сразу можете создать проект, оформить его описание, добавить изображения, видео и целевые суммы, выбрать тип сбора и запустить кампанию.   
-            <br>Для вкладчиков: ознакомьтесь с проектами, выберите интересующий, внесите вклад любым удобным способом. Если сбор не выполняется — получите возврат средств на указанные реквизиты.
-            <br>Все коммуникации между участниками происходят через защищенные внутренние сообщения. Авторы могут видеть статистику и управлять сборами в режиме реального времени.
-        </p>
+<!-- Свежая секция "Как пользоваться платформой" -->
+<div class="page" id="usage">
+    <div class="usage-container">
+        <h2 class="usage-title">Как пользоваться платформой</h2>
+        <div class="usage-cards">
+            <!-- Карточка 1: Создать -->
+            <div class="usage-card">
+                <div class="usage-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="usage-card-title">Создать</h3>
+                <p class="usage-card-text">
+                    Зарегистрируйтесь → заполните анкету проекта → добавьте описание, фото/видео и цель → выберите формат сбора → запустите.
+                </p>
+                <span class="usage-tag">5–10 минут</span>
+            </div>
+
+            <!-- Карточка 2: Поддержать -->
+            <div class="usage-card">
+                <div class="usage-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15C21 16.1046 20.1046 17 19 17H7L3 21V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="usage-card-title">Поддержать</h3>
+                <p class="usage-card-text">
+                    Найдите проект по интересам → ознакомьтесь с деталями → внесите вклад. Если цель не достигнута — средства вернутся автоматически.
+                </p>
+                <span class="usage-tag">Безопасно и прозрачно</span>
+            </div>
+
+            <!-- Карточка 3: Управлять -->
+            <div class="usage-card">
+                <div class="usage-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 8V14L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="usage-card-title">Управлять</h3>
+                <p class="usage-card-text">
+                    Авторы видят статистику в реальном времени. Вся переписка — через защищённые внутренние сообщения. Поддержка — 24/7.
+                </p>
+                <span class="usage-tag">Полный контроль</span>
+            </div>
+        </div>
     </div>
 </div>
 
