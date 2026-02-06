@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block title %}О платформе{% endblock %}
 {% block content %}
+{% load static %}
 
 <!-- Шапка -->
 <header class="navbar">
@@ -10,8 +10,10 @@
     </a>
     <a href="{% url 'index' %}">Главная</a>
     <a href="{% url 'projects' %}">Проекты</a>
-    <a href="{% url 'register' %}">Создать проект</a>
-    <a href="{% url 'register' %}">Вход/Регистрация</a>
+    <a href="#" id="create-project-link">Создать проект</a>
+<span id="auth-buttons">
+    <a href="{% url 'enter' %}" class="auth-link">Вход/Регистрация</a>
+</span>
 </header>
 
 <!-- Страницы -->
@@ -21,7 +23,7 @@
         <h1>О платформе</h1>
         <p class="subtitle">Прозрачный краудфандинг.</p>
         <div class="buttons">
-            <a href="#projects" class="btn btn-primary">Создать проект</a>
+            <a href="#" id="create-project-link" class="btn btn-primary">Создать проект</a>
             <a href="{% url 'projects' %}" class="btn btn-secondary">Смотреть проекты</a>
         </div>
     </div>

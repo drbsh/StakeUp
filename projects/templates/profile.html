@@ -6,13 +6,13 @@
 {% block content %}
 
 <header class="navbar">
-    <a href="{% url 'index' %}" class="logo-link">
+    <a href="{% url 'projects:index' %}" class="logo-link">
         <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
     </a>
-    <a href="{% url 'about' %}">Главная</a>
-    <a href="{% url 'projects' %}">Проекты</a>
-    <a href="{% url 'register' %}">Создать проект</a>
-    <a href="{% url 'register' %}">Выход</a>
+    <a href="{% url 'projects:about' %}">Главная</a>
+    <a href="{% url 'projects:projects_list' %}">Проекты</a>
+    <a href="{% url 'projects:create_project' %}">Создать проект</a>
+    <a href="{% url 'projects:logout' %}" onclick="return confirm('Вы уверены, что хотите выйти?')">Выход</a>
 </header>
 
 <div class="page profile-page">
@@ -22,7 +22,7 @@
             <!-- Аватар -->
             <div class="profile-avatar">
                 {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" alt="Аватар" class="avatar-img">
+                    <img src="{{ user.avatar }}" alt="Аватар" class="avatar-img">
                 {% else %}
                     <img src="{% static 'Image/avatar.png' %}" alt="Аватар по умолчанию" class="avatar-img">
                 {% endif %}
@@ -30,45 +30,68 @@
 
             <!-- Имя и статус -->
             <h1 class="profile-name">
-                {{ user.get_full_name|default:user.username }}
+                {{ user.first_name }} {{ user.last_name }}
             </h1>
             <p class="profile-status">Пользователь платформы</p>
 
-            <!-- Персональные данные -->
             <div class="profile-info">
                 <div class="info-row">
                     <span class="info-label">📧 Email:</span>
-                    <span class="info-value">{{ user.email|default:"— не указан" }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">📅 На платформе с:</span>
                     <span class="info-value">
-                        {{ user.date_joined|date:"d E Y" }}
+                    {% if user.email %}
+                        {{ user.email }}
+                    {% else %}
+                        — не указан
+                    {% endif %}
                     </span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">📍 Возраст:</span>
-                    <span class="info-value">{{ user.profile.city|default:"—" }}</span>
+                    <span class="info-label">📅 На платформе с:</span>
+                    <span class="info-value">{{ user.date_joined|date:"d E Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">🎂 Возраст:</span>
+                    <span class="info-value">{{ user.age|default:"—" }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">🔗 Telegram:</span>
                     <span class="info-value">
-                        {% if user.profile.telegram %}
-                            <a href="https://t.me/{{ user.profile.telegram|slice:'1:' }}" target="_blank" class="profile-link">
-                                {{ user.profile.telegram }}
-                            </a>
+                        {% if user.telegram %}
+                            {% if user.telegram|first == "@" %}
+                                <a href="https://t.me/{{ user.telegram|slice:"1:" }}" target="_blank" class="profile-link">
+                                    {{ user.telegram }}
+                                </a>
+                            {% else %}
+                                <a href="https://t.me/{{ user.telegram }}" target="_blank" class="profile-link">
+                                    @{{ user.telegram }}
+                                </a>
+                            {% endif %}
                         {% else %}
                             —
                         {% endif %}
                     </span>
                 </div>
+                <div class="info-row">
+                    <span class="info-label">🏙️ Город:</span>
+                    <span class="info-value">{{ user.city|default:"—" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">💼 Био:</span>
+                    <span class="info-value">{{ user.bio|default:"—" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">💰 Крипто-кошелёк:</span>
+                    <span class="info-value">{{ user.crypto_wallet|default:"—" }}</span>
+                </div>
             </div>
+        </div>
 
+        <div class="profile-actions">
             <!-- Кнопка редактирования -->
-            <a href="{% url 'edit_profile' %}" class="btn btn-primary profile-edit-btn">
+            <a href="{% url 'projects:edit_profile' %}" class="btn btn-primary profile-edit-btn">
                 Редактировать профиль
             </a>
-                <!-- Кнопка удаления (прозрачная, с красной рамкой) -->
+            <!-- Кнопка удаления (прозрачная, с красной рамкой) -->
             <button type="button" class="btn btn-outline-danger profile-delete-btn" onclick="confirmDelete()">
                 Удалить профиль
             </button>
@@ -81,11 +104,9 @@
                 <div class="stat-content">
                     <h3 class="stat-title">Инвестировано</h3>
                     <p class="stat-value">
-                        {{ user.total_invested|default:0 }} ₽
-                        <!-- или BTC/USDT, если крипта: -->
-                        <!-- {{ user.total_invested_crypto|floatformat:4 }} BTC -->
+                        {{ user.total_invested|default:0 }} USDT
                     </p>
-                    <p class="stat-desc">в {{ user.backed_projects_count|default:0 }} проект{{ user.backed_projects_count|pluralize:"е,ах,ах" }}</p>
+                    <p class="stat-desc">в {{ user.donations|length|default:0 }} проект{{ user.donations|length|default:0|pluralize:"е,ах,ах" }}</p>
                 </div>
             </div>
 
@@ -93,11 +114,11 @@
                 <div class="stat-icon"></div>
                 <div class="stat-content">
                     <h3 class="stat-title">Создано проектов</h3>
-                    <p class="stat-value">{{ user.owned_projects_count|default:0 }}</p>
+                    <p class="stat-value">{{ user.projects|length|default:0 }}</p>
                     <p class="stat-desc">
-                        {% if user.owned_projects_count == 1 %}
+                        {% if user.projects|length|default:0 == 1 %}
                             активный проект
-                        {% elif user.owned_projects_count|add:0 > 1 and user.owned_projects_count|add:0 < 5 %}
+                        {% elif user.projects|length|default:0 > 1 and user.projects|length|default:0 < 5 %}
                             активных проекта
                         {% else %}
                             активных проектов
@@ -151,5 +172,16 @@
         <p>&copy; 2025 Краудфандинг. Будущее. Все права защищены.</p>
     </div>
 </footer>
+
+<script>
+    function confirmDelete() {
+        if (confirm('Вы уверены, что хотите удалить свой профиль? Это действие необратимо!')) {
+            // Здесь можно добавить запрос на удаление профиля
+            alert('Функция удаления профиля пока недоступна');
+        }
+    }
+    
+    console.log("Email пользователя:", "{{ user.email|default:'не указан' }}");
+</script>
 
 {% endblock %}

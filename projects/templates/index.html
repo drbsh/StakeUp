@@ -5,13 +5,15 @@
 
 <!-- Шапка -->
 <header class="navbar">
-    <a href="{% url 'index' %}" class="logo-link">
+    <a href="{% url 'projects:index' %}" class="logo-link">
         <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
     </a>
-    <a href="{% url 'about' %}">О платформе</a>
-    <a href="{% url 'projects' %}">Проекты</a>
-    <a href="{% url 'register' %}">Создать проект</a>
-    <a href="{% url 'register' %}">Вход/Регистрация</a>
+    <a href="{% url 'projects:about' %}">О платформе</a>
+    <a href="{% url 'projects:projects_list' %}">Проекты</a>
+    <a href="#" id="create-project-link">Создать проект</a>
+<span id="auth-buttons">
+    <a href="{% url 'projects:login' %}" class="auth-link">Вход/Регистрация</a>
+</span>
 </header>
 
 <!-- Страницы -->
@@ -21,8 +23,8 @@
         <h1>Краудфандинг. Будущее.</h1>
         <p class="subtitle">Платформа для поддержки идей и инициатив</p>
         <div class="buttons">
-            <a href="{% url 'projects' %}" class="btn btn-primary">Смотреть проекты</a>
-            <a href="{% url 'about' %}" class="btn btn-secondary">Узнать больше</a>
+            <a href="{% url 'projects:projects_list' %}" class="btn btn-primary">Смотреть проекты</a>
+            <a href="{% url 'projects:about' %}" class="btn btn-secondary">Узнать больше</a>
         </div>
     </div>
 </div>
@@ -38,6 +40,7 @@
     <!-- Позже заполните -->
     <h2 style="text-align: center; padding-top: 100px;">Проекты — скоро</h2>
 </div>
+
 <div class="page" id="projects">
     <div class="projects-header">
         <h2 class="projects-title">Текущие проекты</h2>
@@ -51,8 +54,8 @@
                 <h3 class="project-name">Эко-парк "Зелёный Лист"</h3>
                 <p class="project-slogan">Создадим первый городской лес в центре мегаполиса</p>
                     <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 1 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 1 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -66,8 +69,8 @@
                 <h3 class="project-name">Школа будущего</h3>
                 <p class="project-slogan">Бесплатное IT-образование для детей из малых городов</p>
                     <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 2 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 2 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -81,8 +84,8 @@
                 <h3 class="project-name">Мост надежды</h3>
                 <p class="project-slogan">Восстановим мост в отдалённом селе — вернём связь с миром</p>
                     <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 3 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 3 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -96,34 +99,38 @@
                 <h3 class="project-name">Арт-резиденция</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                 <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 4 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 4 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                 </div>
             </div>
             <div class="project-image">
                 <img src="{% static 'Image/art.png' %}" alt="Резиденция">
             </div>
         </div>
-                <div class="project-card">
+
+        <!-- Карточка 5 -->
+        <div class="project-card">
             <div class="project-text">
-                <h3 class="project-name">Арт-резиденция</h3>
+                <h3 class="project-name">Арт-резиденция 2</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                 <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 5 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 5 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                 </div>
             </div>
             <div class="project-image">
                 <img src="{% static 'Image/art.png' %}" alt="Резиденция">
             </div>
         </div>
-                <div class="project-card">
+
+        <!-- Карточка 6 -->
+        <div class="project-card">
             <div class="project-text">
-                <h3 class="project-name">Арт-резиденция</h3>
+                <h3 class="project-name">Арт-резиденция 3</h3>
                 <p class="project-slogan">Поддержим молодых художников и их смелые эксперименты</p>
                     <div class="project-buttons">
-                        <a href="{% url 'project_info' %}" class="btn btn-primary btn-small">Узнать больше</a>
-                        <a href="{% url 'donate' %}" class="btn btn-secondary btn-small">Пожертвовать</a>
+                        <a href="{% url 'projects:project_detail' 6 %}" class="btn btn-primary btn-small">Узнать больше</a>
+                        <a href="{% url 'projects:donate' 6 %}" class="btn btn-secondary btn-small">Пожертвовать</a>
                     </div>
             </div>
             <div class="project-image">
@@ -132,6 +139,7 @@
         </div>
     </div>
 </div>
+
 <!-- Преимущества -->
 <div class="page" id="advantages">
     <div class="advantages-container">
@@ -173,6 +181,7 @@
         </div>
     </div>
 </div>
+
 <div class="page" id="faq">
     <div class="faq-content">
         <h2 class="faq-title">Часто задаваемые вопросы</h2>
@@ -205,6 +214,7 @@
         </div>
     </div>
 </div>
+
 <footer class="site-footer">
     <div class="footer-container">
         <div class="footer-brand">

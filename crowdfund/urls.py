@@ -1,22 +1,22 @@
-from django.contrib import admin
-from django.urls import path
-from django.shortcuts import render
-from . import views
-# Временная view для главной — пока нет apps/users/views.py:index
-def index(request):
-    return render(request, 'index.html')
+# crowdfund/urls.py
+
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from projects import views_sql
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('about/', views.about, name='about'),
-    path('register/', views.register, name='register'),
-    path('enter/', views.enter, name='enter'),
-    path('forgotpass/', views.forgotpass, name='forgotpass'),
-    path('profile/', views.profile, name='profile'),
-    path('edit_profile/', views.edit_profile, name='edit_profile'),
-    path('projects/', views.projects, name='projects'),
-    path('project_info/', views.project_info, name='project_info'),
-    path('create_project/', views.create_project, name='create_project'),
-    path('donate/', views.donate, name='donate'),
+    # API эндпоинты
+    path('api/register/', views_sql.api_register, name='api_register'),
+    path('api/login/', views_sql.api_login, name='api_login'),
+    path('api/profile/', views_sql.api_profile, name='api_profile'),
+    path('api/forgot-password/', views_sql.api_forgot_password, name='api_forgot_password'),  # ← ДОБАВЛЕНО
+    path('api/reset-password/', views_sql.api_reset_password, name='api_reset_password'), 
+    
+    # Все остальные маршруты из приложения projects
+    path('', include('projects.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

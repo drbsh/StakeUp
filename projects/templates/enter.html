@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<!-- Шапка -->
+<header class="navbar">
+    <a href="{% url 'projects:index' %}" class="logo-link">
+        <img src="{% static 'Image/s.png' %}" alt="s" class="stakeup">
+    </a>
+    <a href="{% url 'projects:index' %}">Главная</a>
+    <a href="{% url 'projects:projects_list' %}">Проекты</a>
+    <a href="{% url 'projects:register' %}">Регистрация</a>
+</header>
+
+<!-- Основной контент -->
+<div class="page" style="padding-top: 120px; padding-bottom: 80px;">
+    <div style="max-width: 500px; width: 100%; padding: 0 80px; text-align: center;">
+        <h1 style="font-size: 42px; font-weight: 700; color: #000; margin: 0 0 16px;">Вход в систему</h1>
+        <p style="font-size: 36px; font-weight: 700; color: #999; margin: 0 0 40px;">Пожалуйста, авторизуйтесь</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+            <input type="text" id="id_username" class="login-input" placeholder="Логин или email">
+
+            <div style="position: relative;">
+                <input type="password" id="id_password" class="login-input" placeholder="Пароль" style="padding-right: 50px;">
+                <img src="{% static 'Image/hide.png' %}"
+                    class="toggle-password"
+                    data-target="id_password"
+                    data-state="hidden"
+                    data-show-src="{% static 'Image/show.png' %}"
+                    data-hide-src="{% static 'Image/hide.png' %}"
+                    alt="Показать пароль"
+                    style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; width: 20px; height: 20px;"
+                >
+            </div>
+        </div>
+
+        <button id="login-btn" class="btn btn-primary" style="width: 100%; padding: 14px;">
+            Войти
+        </button>
+
+        <a href="{% url 'projects:forgot_password' %}" class="btn btn-secondary" style="width: 100%; margin-top: 15px;">
+            Забыли пароль?
+        </a>
+
+        <p class="agreePageEnter" style="
+            font-size: 14px;
+            color: #999;
+            margin-top: 24px;
+            line-height: 1.5;
+        ">
+            Нет аккаунта? <a href="{% url 'projects:register' %}" style="color: #000; text-decoration: underline;">Зарегистрироваться</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Переключатель пароля
+    document.querySelectorAll('.toggle-password').forEach(img => {
+        img.addEventListener('click', function () {
+            const inputId = this.getAttribute('data-target');
+            const input = document.getElementById(inputId);
+            const isHidden = this.getAttribute('data-state') === 'hidden';
+            
+            input.type = isHidden ? 'text' : 'password';
+            this.src = isHidden 
+                ? this.getAttribute('data-show-src') 
+                : this.getAttribute('data-hide-src');
+            this.setAttribute('data-state', isHidden ? 'visible' : 'hidden');
+        });
+    });
+
+    // Вход через API
+    document.getElementById('login-btn').addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById('id_username').value.trim();
+        const password = document.getElementById('id_password').value;
+
+        if (!username || !password) {
+            alert('Введите логин и пароль');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Сохраняем данные
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Перенаправляем на главную
+                alert('Добро пожаловать, ' + data.user.username + '!');
+                window.location.href = '{% url "projects:index" %}';
+            } else {
+                const errors = data.detail || 'Неверные учётные данные';
+                alert('Ошибка входа:\n' + errors);
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            alert('Не удалось подключиться к серверу. Проверьте интернет.');
+        }
+    });
+});
+</script>
+
+{% endblock %}
