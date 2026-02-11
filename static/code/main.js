@@ -1,5 +1,98 @@
+// ========================
+// Модальное окно удаления профиля
+// ========================
+
+let isDeleting = false;
+
+function showDeleteConfirmation() {
+    console.log('Открываем модальное окно');
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function closeDeleteModal() {
+    console.log('Закрываем модальное окно');
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function executeDeleteProfile() {
+    console.log('Выполняем удаление профиля');
+    if (isDeleting) return;
+    
+    isDeleting = true;
+    
+    const btn = document.querySelector('.modal-buttons .btn-danger');
+    if (!btn) {
+        isDeleting = false;
+        return;
+    }
+    
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span style="display:inline-block;width:20px;height:20px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></span> Удаление...';
+    btn.disabled = true;
+
+    fetch('/delete-profile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.href = '/';
+        } else {
+            alert(data.error || 'Ошибка при удалении профиля');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            isDeleting = false;
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при удалении профиля. Попробуйте ещё раз.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        isDeleting = false;
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Закрытие модального окна при клике вне его
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (modal && modal.style.display === 'block' && event.target === modal) {
+        closeDeleteModal();
+    }
+});
+
+// ========================
+// Анимация появления контента
+// ========================
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Создаём Observer для анимации появления
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -17,7 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// ========================
 // FAQ аккордеон
+// ========================
+
 document.addEventListener('DOMContentLoaded', function() {
     const faqButtons = document.querySelectorAll('.faq-btn');
     if (faqButtons.length > 0) {
@@ -40,7 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ========================
 // Переключатель видимости пароля
+// ========================
+
 document.addEventListener('DOMContentLoaded', function() {
     const toggles = document.querySelectorAll('.toggle-password');
     if (toggles.length > 0) {
@@ -56,12 +155,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (currentState === 'hidden') {
                     input.type = 'text';
-                    this.src = showSrc;
+                    this.src = showSrc + '?t=' + Date.now(); // ← ДОБАВЛЕНО
                     this.setAttribute('data-state', 'visible');
                     this.alt = "Скрыть пароль";
                 } else {
                     input.type = 'password';
-                    this.src = hideSrc;
+                    this.src = hideSrc + '?t=' + Date.now(); // ← ДОБАВЛЕНО
                     this.setAttribute('data-state', 'hidden');
                     this.alt = "Показать пароль";
                 }
@@ -70,7 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ========================
 // Фильтры и сортировка проектов
+// ========================
+
 document.addEventListener('DOMContentLoaded', function() {
     const chips = document.querySelectorAll('.chip[data-filter]');
     const cards = document.querySelectorAll('.project-card');
@@ -136,7 +238,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 🔥 КРИТИЧЕСКИ ВАЖНО: Обновление интерфейса авторизации
+// ========================
+// Обновление интерфейса авторизации
+// ========================
+
 document.addEventListener('DOMContentLoaded', function () {
     updateAuthUI();
 });
@@ -145,23 +250,22 @@ function updateAuthUI() {
     const authContainer = document.getElementById('auth-buttons');
     if (!authContainer) return;
 
-    // Получаем данные из глобальной переменной
     const user = window.user_data;
     const token = localStorage.getItem('token');
 
     if (token || user) {
-        // 🔸 Авторизован - показываем аватар и логин
         const nickname = user?.username || 'Пользователь';
         
-        // 🔥 Обработка пути к аватару
         let avatarUrl = '/static/Image/default-avatar.png';
-        if (user?.avatar) {
-            // Если аватар начинается с /media/ - используем как есть
-            // Если начинается с /static/ - используем как есть
-            // Иначе добавляем /media/
-            if (user.avatar.startsWith('/media/') || user.avatar.startsWith('/static/')) {
+        
+        if (user?.avatar && user.avatar.trim() !== '') {
+            if (user.avatar.startsWith('/media/')) {
                 avatarUrl = user.avatar;
-            } else {
+            } 
+            else if (user.avatar.startsWith('/static/')) {
+                avatarUrl = user.avatar;
+            }
+            else {
                 avatarUrl = '/media/' + user.avatar;
             }
         }
@@ -178,7 +282,6 @@ function updateAuthUI() {
             </a>
         `;
     } else {
-        // 🔸 Не авторизован - показываем кнопку входа
         authContainer.innerHTML = `
             <a href="/enter/" class="auth-link" style="text-decoration: none; color: #000; font-weight: 500;">
                 Вход/Регистрация
@@ -187,7 +290,10 @@ function updateAuthUI() {
     }
 }
 
+// ========================
 // Кнопка "Создать проект"
+// ========================
+
 document.addEventListener('DOMContentLoaded', function () {
     const createProjectLink = document.getElementById('create-project-link');
     if (createProjectLink) {
@@ -196,10 +302,8 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const token = localStorage.getItem('token');
             if (token) {
-                // Авторизован — идём на создание проекта
                 window.location.href = '/create-project/';
             } else {
-                // Не авторизован — идём на регистрацию
                 window.location.href = '/register/';
             }
         });

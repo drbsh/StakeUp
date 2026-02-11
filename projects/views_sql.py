@@ -11,7 +11,10 @@ from rest_framework import status
 import json
 import jwt
 import datetime
+import os  # ← КРИТИЧЕСКИ ВАЖНО: добавлен импорт os
 from decimal import Decimal
+from django.conf import settings  # ← Уже есть, но убедимся
+from django.core.files.storage import default_storage  # ← ДОБАВЛЕНО
 from .models_sql import User, Project, Category, Donation
 from .database import db
 
@@ -60,6 +63,10 @@ def get_user_data(request):
 
 # Базовые страницы
 def index(request):
+    print(f"DEBUG: session keys = {request.session.keys()}")
+    print(f"DEBUG: session user_id = {request.session.get('user_id')}")
+    print(f"DEBUG: session username = {request.session.get('username')}")
+
     projects = Project.get_all(status='active', limit=12)
     user_data = get_user_data(request)
     return render(request, 'index.html', {'projects': projects, 'user': user_data})
@@ -377,6 +384,67 @@ def api_profile(request):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+# Удаление профиля
+def delete_profile(request):
+    if not request.session.get('user_id'):
+        return JsonResponse({'error': 'Необходимо войти в систему'}, status=401)
+    
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Неверный метод запроса'}, status=405)
+    
+    try:
+        user_id = request.session['user_id']
+        user = User.get_by_id(user_id)
+        
+        if not user:
+            request.session.flush()
+            return JsonResponse({'error': 'Пользователь не найден'}, status=404)
+        
+        # 🔥 ВАЖНО: Проверяем, есть ли активные проекты
+        active_projects = Project.get_by_owner(user_id, status='active')
+        if active_projects:
+            return JsonResponse({
+                'error': f'У вас есть {len(active_projects)} активных проектов. Сначала удалите или завершите их.',
+                'active_projects_count': len(active_projects)
+            }, status=400)
+        
+        # 🔥 Удаляем все проекты пользователя (включая черновики)
+        projects = Project.get_by_owner(user_id)
+        for project in projects:
+            Project.delete(project['id'])
+        
+        # 🔥 Удаляем все пожертвования пользователя
+        donations = Donation.get_by_donor(user_id)
+        for donation in donations:
+            Donation.rollback_donation(donation['id'])
+        
+        # 🔥 Удаляем аватар из файловой системы
+        if user['avatar'] and not user['avatar'].startswith('/static/'):
+            try:
+                avatar_path = os.path.join(settings.MEDIA_ROOT, user['avatar'].lstrip('/media/').lstrip('/'))
+                if os.path.exists(avatar_path):
+                    os.remove(avatar_path)
+            except Exception as e:
+                print(f"⚠️ Ошибка при удалении аватара: {e}")
+        
+        # 🔥 Мягкое удаление пользователя (деактивация)
+        User.delete(user_id)
+        
+        # 🔥 Очищаем сессию
+        request.session.flush()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Ваш профиль успешно удалён. Спасибо за использование платформы!'
+        }, status=200)
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({
+            'error': f'Ошибка при удалении профиля: {str(e)}'
+        }, status=500)
+
 # Создание проекта
 def create_project(request):
     if not request.session.get('user_id'):
@@ -420,6 +488,7 @@ def create_project(request):
     user_data = get_user_data(request)
     return render(request, 'create_project.html', {'categories': categories, 'user': user_data})
 
+# Редактирование профиля
 # Редактирование профиля
 def edit_profile(request):
     if not request.session.get('user_id'):
@@ -474,14 +543,9 @@ def edit_profile(request):
                 if ext not in allowed_extensions:
                     raise ValueError("Разрешены только файлы форматов JPG, JPEG, PNG, GIF")
                 
-                # Создаём имя файла
-                import os
-                from django.conf import settings
-                from django.core.files.storage import default_storage
-                
                 # Удаляем старый аватар, если он есть
-                if user['avatar'] and user['avatar'] != '/static/Image/default-avatar.png':
-                    old_avatar_path = os.path.join(settings.MEDIA_ROOT, user['avatar'].lstrip('/'))
+                if user['avatar'] and user['avatar'] != '/static/image/default-avatar.png':
+                    old_avatar_path = os.path.join(settings.MEDIA_ROOT, user['avatar'].lstrip('/media/').lstrip('/'))
                     if os.path.exists(old_avatar_path):
                         os.remove(old_avatar_path)
                 
@@ -520,7 +584,7 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {
         'user': user,
         'telegram_for_form': telegram_for_form,
-        'user_data': user_data  # ← Исправлено: не дублируем ключ 'user'
+        'user_data': user_data
     })
 
 # Пожертвования

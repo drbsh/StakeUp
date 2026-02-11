@@ -19,6 +19,11 @@ urlpatterns = [
     path('forgot-password/', views_sql.forgot_password, name='forgot_password'),
     path('logout/', views_sql.logout_view, name='logout'),
     
+        
+    path('profile/', views_sql.profile, name='profile'),
+    path('edit-profile/', views_sql.edit_profile, name='edit_profile'),
+    path('delete-profile/', views_sql.delete_profile, name='delete_profile'),
+    
     # Профиль и проекты
     path('profile/', views_sql.profile, name='profile'),
     path('create-project/', views_sql.create_project, name='create_project'),

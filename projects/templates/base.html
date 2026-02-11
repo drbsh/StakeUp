@@ -13,7 +13,14 @@
 </head>
 <body>
     {% block content %}{% endblock %}
-    
+    {% if user %}
+  {{ user|json_script:"user-data" }}
+  <script>
+    window.user_data = JSON.parse(document.getElementById('user-data').textContent);
+  </script>
+{% else %}
+  <script>window.user_data = null;</script>
+{% endif %}
     <script src="{% static 'code/main.js' %}"></script>
 </body>
 </html>

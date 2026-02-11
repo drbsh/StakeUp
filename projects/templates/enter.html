@@ -56,22 +56,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Переключатель пароля
-    document.querySelectorAll('.toggle-password').forEach(img => {
-        img.addEventListener('click', function () {
-            const inputId = this.getAttribute('data-target');
-            const input = document.getElementById(inputId);
-            const isHidden = this.getAttribute('data-state') === 'hidden';
-            
-            input.type = isHidden ? 'text' : 'password';
-            this.src = isHidden 
-                ? this.getAttribute('data-show-src') 
-                : this.getAttribute('data-hide-src');
-            this.setAttribute('data-state', isHidden ? 'visible' : 'hidden');
-        });
-    });
-
-    // Вход через API
+    // ===================================
+    // ТОЛЬКО КНОПКА ВХОДА (без дублирования переключателя пароля!)
+    // ===================================
     document.getElementById('login-btn').addEventListener('click', async function (e) {
         e.preventDefault();
 
@@ -83,11 +70,20 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Отключаем кнопку во время загрузки
+        const originalBtnText = this.innerHTML;
+        this.disabled = true;
+        this.innerHTML = '<span style="display:inline-block;width:20px;height:20px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span> Вход...';
+
         try {
             const response = await fetch('/api/login/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: 'same-origin'
             });
 
             const data = await response.json();
@@ -103,13 +99,37 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 const errors = data.detail || 'Неверные учётные данные';
                 alert('Ошибка входа:\n' + errors);
+                
+                // Возвращаем кнопку в исходное состояние
+                this.disabled = false;
+                this.innerHTML = originalBtnText;
             }
         } catch (err) {
             console.error('Login error:', err);
             alert('Не удалось подключиться к серверу. Проверьте интернет.');
+            
+            // Возвращаем кнопку в исходное состояние
+            this.disabled = false;
+            this.innerHTML = originalBtnText;
         }
     });
 });
+
+// Функция получения CSRF токена
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 
 {% endblock %}
