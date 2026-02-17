@@ -6,6 +6,10 @@ from . import views_sql
 app_name = 'projects'
 
 urlpatterns = [
+    
+    path('api/forgot-password/', views_sql.api_forgot_password, name='api_forgot_password'),  # ← добавить
+    path('api/reset-password/', views_sql.api_reset_password, name='api_reset_password'), 
+    
     # Основные страницы
     path('', views_sql.index, name='index'),
     path('about/', views_sql.about, name='about'),

@@ -14,7 +14,7 @@ urlpatterns = [
     path('api/reset-password/', views_sql.api_reset_password, name='api_reset_password'), 
     
     # Все остальные маршруты из приложения projects
-    path('', include('projects.urls')),
+    path('', include('projects.urls', namespace='projects')),
 ]
 
 if settings.DEBUG:

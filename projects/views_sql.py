@@ -17,6 +17,8 @@ from django.conf import settings  # ← Уже есть, но убедимся
 from django.core.files.storage import default_storage  # ← ДОБАВЛЕНО
 from .models_sql import User, Project, Category, Donation
 from .database import db
+import base64
+import logging
 
 # Настройки JWT
 JWT_SECRET_KEY = 'change-this-in-production'
@@ -133,33 +135,86 @@ def profile(request):
         'donations': donations
     })
 
-# API эндпоинты
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_forgot_password(request):
     """
-    Заглушка: генерация токена сброса пароля
-    В реальном проекте: отправка email с ссылкой для сброса
+    Упрощённая версия для локальной разработки
     """
-    identifier = request.data.get('identifier')  # логин или email
+    identifier = request.data.get('identifier')
     
     if not identifier:
         return Response(
-            {'detail': 'Укажите логин или email'}, 
+            {'detail': 'Укажите логин или email'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
+    identifier = identifier.strip()
+    print(f"🔍 Поиск пользователя: '{identifier}'")
+    
+    # Ищем пользователя по разным критериям
+    user = None
+    
+    # 1. Сначала пробуем по логину (точное совпадение)
+    user = User.get_by_username(identifier)
+    if user:
+        print(f"✅ Найден по логину: {user['username']}")
+    
+    # 2. Если не найден, пробуем по почте
+    if not user:
+        user = User.get_by_email(identifier)
+        if user:
+            print(f"✅ Найден по email: {user['email']}")
+    
+    # 3. Если всё ещё не найден, пробуем поиск по части логина или почты
+    if not user:
+        print(f"❌ Пользователь не найден. Проверяем базу...")
+        try:
+            # Поиск по логину (LIKE)
+            query = "SELECT id, username, email FROM users WHERE username ILIKE %s LIMIT 1"
+            result = db.execute_query(query, (identifier,))
+            if result:
+                print(f"⚠️ Найден по частичному совпадению логина: {result[0]}")
+            
+            # Поиск по почте (LIKE)
+            query = "SELECT id, username, email FROM users WHERE email ILIKE %s LIMIT 1"
+            result = db.execute_query(query, (identifier,))
+            if result:
+                print(f"⚠️ Найден по частичному совпадению email: {result[0]}")
+            
+            # Список всех пользователей для отладки
+            query = "SELECT id, username, email, is_active FROM users LIMIT 10"
+            all_users = db.execute_query(query)
+            print(f"📋 Первые 10 пользователей в базе:")
+            for u in all_users:
+                print(f"   - ID: {u['id']}, Логин: {u['username']}, Email: {u['email']}, Активен: {u['is_active']}")
+        except Exception as e:
+            print(f"⚠️ Ошибка при отладке: {e}")
+    
+    if not user:
+        return Response(
+            {'detail': 'Пользователь не найден'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # Генерируем токен
+    uid = base64.urlsafe_b64encode(str(user['id']).encode()).decode()
+    token = f'reset-token-{user["id"]}'
+    
+    print(f"✅ Токен сгенерирован для {user['username']} (ID: {user['id']})")
+    
     return Response({
-        'uid': 'MTIz',  # base64-encoded "123"
-        'token': '5x-3y-9z-test-token',
-        'detail': 'Ссылка для сброса пароля отправлена на ваш email (заглушка)'
+        'uid': uid,
+        'token': token,
+        'detail': 'Готово к сбросу пароля'
     }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_reset_password(request):
     """
-    Заглушка: сброс пароля по токену
+    Сброс пароля по токену
     """
     uid = request.data.get('uid')
     token = request.data.get('token')
@@ -169,26 +224,55 @@ def api_reset_password(request):
     # Валидация
     if not all([uid, token, new_password, confirm_password]):
         return Response(
-            {'detail': 'Все поля обязательны'}, 
+            {'detail': 'Все поля обязательны'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
     if new_password != confirm_password:
         return Response(
-            {'detail': 'Пароли не совпадают'}, 
+            {'detail': 'Пароли не совпадают'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
     if len(new_password) < 8:
         return Response(
-            {'detail': 'Пароль должен содержать минимум 8 символов'}, 
+            {'detail': 'Пароль должен содержать минимум 8 символов'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    return Response({
-        'detail': 'Пароль успешно изменён! (заглушка)'
-    }, status=status.HTTP_200_OK)
-
+    try:
+        # Декодируем uid
+        user_id = int(base64.urlsafe_b64decode(uid).decode())
+        
+        # Находим пользователя
+        user = User.get_by_id(user_id)
+        if not user:
+            return Response(
+                {'detail': 'Пользователь не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Валидация токена
+        expected_token = f'reset-token-{user_id}'
+        if token != expected_token:
+            return Response(
+                {'detail': 'Неверный токен'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Обновляем пароль
+        User.update(user_id, password=new_password)
+        
+        return Response({
+            'detail': 'Пароль успешно изменён!'
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response(
+            {'detail': f'Ошибка: {str(e)}'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_login(request):

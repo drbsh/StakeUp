@@ -70,7 +70,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ===================================
     // ТОЛЬКО кнопка восстановления пароля
-    // Переключатель пароля работает через глобальный скрипт из base.html
     // ===================================
     const identifierInput = document.getElementById('id_identifier');
     const newPasswordInput = document.getElementById('id_new_password');
@@ -104,12 +103,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Отключаем кнопку во время загрузки
+        // Отключаем кнопку
         const originalBtnText = this.innerHTML;
         this.disabled = true;
         this.innerHTML = '<span style="display:inline-block;width:20px;height:20px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span> Восстановление...';
 
         try {
+            console.log('=== ШАГ 1: Запрос /api/forgot-password/ ===');
+            console.log('Отправляемые данные:', { identifier });
+
             // Шаг 1: Получить токен сброса
             const forgotRes = await fetch('/api/forgot-password/', {
                 method: 'POST',
@@ -123,14 +125,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const forgotData = await forgotRes.json();
 
+            console.log('Статус ответа:', forgotRes.status);
+            console.log('Ответ от сервера:', forgotData);
+            console.log('forgotData.uid:', forgotData.uid);
+            console.log('forgotData.token:', forgotData.token);
+
             if (!forgotRes.ok) {
                 alert(forgotData.detail || 'Не удалось инициировать сброс пароля.');
-                
-                // Возвращаем кнопку в исходное состояние
                 this.disabled = false;
                 this.innerHTML = originalBtnText;
                 return;
             }
+
+            // КРИТИЧЕСКАЯ ПРОВЕРКА: есть ли токен?
+            if (!forgotData.uid || !forgotData.token) {
+                console.error('❌ ОШИБКА: Ответ не содержит uid или token!');
+                console.error('Полный ответ:', forgotData);
+                
+                // Проверяем, есть ли в ответе сообщение об успехе без токена
+                if (forgotData.detail && forgotData.detail.includes('инструкции отправлены')) {
+                    alert('На вашу почту отправлена инструкция для восстановления пароля.');
+                    window.location.href = '{% url "projects:login" %}';
+                    return;
+                }
+                
+                alert('Ошибка сервера: не получен токен сброса пароля.');
+                this.disabled = false;
+                this.innerHTML = originalBtnText;
+                return;
+            }
+
+            console.log('✅ Токен получен успешно!');
+            console.log('uid:', forgotData.uid);
+            console.log('token:', forgotData.token);
+
+            console.log('\n=== ШАГ 2: Запрос /api/reset-password/ ===');
+            console.log('Отправляемые данные:', {
+                uid: forgotData.uid,
+                token: forgotData.token,
+                new_password: '*** (скрыт)',
+                confirm_password: '*** (скрыт)'
+            });
 
             // Шаг 2: Сбросить пароль
             const resetRes = await fetch('/api/reset-password/', {
@@ -150,23 +185,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const resetData = await resetRes.json();
 
+            console.log('Статус ответа:', resetRes.status);
+            console.log('Ответ от сервера:', resetData);
+
             if (resetRes.ok) {
-                // ✅ УСПЕХ: перенаправляем на страницу входа
                 alert('Пароль успешно изменён! Теперь вы можете войти.');
                 window.location.href = '{% url "projects:login" %}';
             } else {
-                alert(resetData.detail || 'Ошибка при сбросе пароля.');
-                
-                // Возвращаем кнопку в исходное состояние
+                alert('Ошибка: ' + (resetData.detail || 'Неизвестная ошибка'));
                 this.disabled = false;
                 this.innerHTML = originalBtnText;
             }
 
         } catch (err) {
-            console.error('Ошибка сети:', err);
+            console.error('❌ Ошибка сети:', err);
+            console.error('Стек ошибки:', err.stack);
             alert('Не удалось подключиться к серверу. Проверьте соединение.');
-            
-            // Возвращаем кнопку в исходное состояние
             this.disabled = false;
             this.innerHTML = originalBtnText;
         }

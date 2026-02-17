@@ -1,4 +1,5 @@
 .filters-section {
+    margin-top: 30px;
     width: 100%;
     padding: 0 80px 40px;
     background: #fafafa;
@@ -10,12 +11,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
-    align-items: flex-end;
+    align-items: center; /* Изменено с flex-end на center */
 }
 
 .filter-group {
     flex: 1;
     min-width: 250px;
+    display: flex;
+    flex-direction: column;
 }
 
 .filter-title {
@@ -25,12 +28,16 @@
     margin: 0 0 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    /* Добавлено: фиксированная высота для заголовков */
+    height: 24px;
 }
 
 .filter-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    /* Добавлено: фиксированная высота для блока с чипами */
+    min-height: 44px;
 }
 
 .chip {
